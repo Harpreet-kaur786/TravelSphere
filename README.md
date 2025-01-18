@@ -30,3 +30,12 @@ This app gets its data from different sources that work together to provide a sm
    This API provides the information for selected destinations. It shows current weather and forecast so that user can plan their trip accordingly.
 3. Google Maps Static API:
    We are using this API to display static maps with predefined locations for destinations. These help user to visualize the location.
+
+
+Features List: 
+1. Harpreet Kaur:
+   a. ## User Regisration and Login: Secure authentication using Firebase Authentication(email/password and login)
+   b.Edit Profile: Enable users to update their name, profile picture, and email address.
+   c.App Tutorial: Create a basic walkthrough for first-time users explaning app features.
+   d.Feedback Option- Include a feedback form for app improvement suggestions.
+OPTIONAL FEATURE:(Personalized Dashboard: A unique dashboard showing saved favorites, search history and personalized recommendations.)
