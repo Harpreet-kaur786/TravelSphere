@@ -41,3 +41,17 @@ Features List:
    d.Feedback Option- Include a feedback form for app improvement suggestions.
 OPTIONAL FEATURE:(Personalized Dashboard: A unique dashboard showing saved favorites, search history and personalized recommendations.)
 2. Monika Bhalla
+   1. *View Destination Details (Destination Details Screen)*  
+      - Create detailed pages for destinations, including descriptions, images, and local attractions.
+   2. *User Reviews and Ratings (Destination Details Screen)*  
+      - Enable users to leave reviews and ratings for destinations.
+   3. *Weather Information (Destination Details Screen)*  
+      - Use the OpenWeatherMap API to display current and forecasted weather.
+   4. *Static Map Display (Destination Details Screen)*  
+      - Show a static map image or predefined pins using the Google Maps Static API.
+   Optional Features(Added if needed): 
+   1. Best Time to Visit Section (Destination Details Screen)
+   •	Highlight the best season or months to visit the destination based on weather or activity availability.
+   2. Photo Gallery or Carousel (Destination Details Screen)
+   •	Create a swipeable image gallery for the destination to make the page more visually appealing.
+   
