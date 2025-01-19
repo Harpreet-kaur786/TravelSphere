@@ -40,3 +40,4 @@ Features List:
    c.App Tutorial: Create a basic walkthrough for first-time users explaning app features.
    d.Feedback Option- Include a feedback form for app improvement suggestions.
 OPTIONAL FEATURE:(Personalized Dashboard: A unique dashboard showing saved favorites, search history and personalized recommendations.)
+2. Monika Bhalla
