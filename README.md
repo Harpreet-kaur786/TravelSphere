@@ -54,4 +54,8 @@ OPTIONAL FEATURE:(Personalized Dashboard: A unique dashboard showing saved favor
          •	Highlight the best season or months to visit the destination based on weather or activity availability.
          2. Photo Gallery or Carousel (Destination Details Screen)
          •	Create a swipeable image gallery for the destination to make the page more visually appealing.
-   
+3. Dharshini Panneerchelvam
+        1. Search for Destinations (Home Screen): Implement search functionality by keywords, countries, or categories. 
+        2. Filter Destination (Home Screen): Add filters like "Most Popular," "Highly Rated," or by category. 
+        3. Sort Destinations (Home Screen): Enable sorting by alphabetical order, rating, or proximity. 
+        4. Recommendations Based on Search History/Simple Recommendations (Home Screen): Show suggested destinations based on predefined data or user searches.
