@@ -49,7 +49,7 @@ OPTIONAL FEATURE:(Personalized Dashboard: A unique dashboard showing saved favor
       - Use the OpenWeatherMap API to display current and forecasted weather.
    4. *Static Map Display (Destination Details Screen)*  
       - Show a static map image or predefined pins using the Google Maps Static API.
-   Optional Features: 
+   Optional Features(Added if needed): 
    1. Best Time to Visit Section (Destination Details Screen)
    •	Highlight the best season or months to visit the destination based on weather or activity availability.
    2. Photo Gallery or Carousel (Destination Details Screen)
