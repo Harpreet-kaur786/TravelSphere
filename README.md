@@ -35,11 +35,11 @@ This app gets its data from different sources that work together to provide a sm
 
 Features List: 
 1. Harpreet Kaur:
-   a. ## User Regisration and Login: Secure authentication using Firebase Authentication(email/password and login)
-   b.Edit Profile: Enable users to update their name, profile picture, and email address.
-   c.App Tutorial: Create a basic walkthrough for first-time users explaning app features.
-   d.Feedback Option- Include a feedback form for app improvement suggestions.
-OPTIONAL FEATURE:(Personalized Dashboard: A unique dashboard showing saved favorites, search history and personalized recommendations.)
+         1. ## User Regisration and Login: Secure authentication using Firebase Authentication(email/password and login)
+         2.Edit Profile: Enable users to update their name, profile picture, and email address.
+         3.App Tutorial: Create a basic walkthrough for first-time users explaning app features.
+         4.Feedback Option- Include a feedback form for app improvement suggestions.
+         OPTIONAL FEATURE:(Personalized Dashboard: A unique dashboard showing saved favorites, search history and personalized recommendations.)
 2. Monika Bhalla
          1. *View Destination Details (Destination Details Screen)*  
             - Create detailed pages for destinations, including descriptions, images, and local attractions.
