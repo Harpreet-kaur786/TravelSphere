@@ -47,37 +47,41 @@ Features List:
       5.Users can access an app tutorial explaining features.
 
       6.Users can provide feedback through a form.
-      
+
       7.Users can view a personalized dashboard showing saved favorites and recommendations. (Optional)
 
 2. Monika Bhalla
-         1. *View Destination Details (Destination Details Screen)*  
-            - Create detailed pages for destinations, including descriptions, images, and local attractions.
-         2. *User Reviews and Ratings (Destination Details Screen)*  
-            - Enable users to leave reviews and ratings for destinations.
-         3. *Weather Information (Destination Details Screen)*  
-            - Use the OpenWeatherMap API to display current and forecasted weather.
-         4. *Static Map Display (Destination Details Screen)*  
-            - Show a static map image or predefined pins using the Google Maps Static API.
-      Optional Features(Added if needed): 
-         1. Best Time to Visit Section (Destination Details Screen)
-         •	Highlight the best season or months to visit the destination based on weather or activity availability.
-         2. Photo Gallery or Carousel (Destination Details Screen)
-         •	Create a swipeable image gallery for the destination to make the page more visually appealing.
+
+      1.Users can view destination details, including descriptions, images, and attractions.
+
+      2.Users can leave reviews and ratings for destinations.
+
+      3.Users can view current and forecasted weather using the OpenWeatherMap API.
+
+      4.Users can view a static map of destinations using the Google Maps Static API.
+
+      5.Users can check the best time to visit a destination. (Optional)
+
+      6.Users can browse a swipeable photo gallery for destinations. (Optional)
+
 3. Dharshini Panneerchelvam
-        1. Search for Destinations (Home Screen): Implement search functionality by keywords, countries, or categories. 
-        2. Filter Destination (Home Screen): Add filters like "Most Popular," "Highly Rated," or by category. 
-        3. Sort Destinations (Home Screen): Enable sorting by alphabetical order, rating, or proximity. 
-        4. Recommendations Based on Search History/Simple Recommendations (Home Screen): Show suggested destinations based on predefined data or user searches.
+       
+      1.Users can search for destinations by keywords, countries, or categories.
+
+      2.Users can filter destinations by popularity, ratings, or categories.
+
+      3.Users can sort destinations alphabetically, by ratings, or proximity.
+        
+      4.Users can view recommendations based on their search history.
 
 4. Kulwinder Kaur Dhailwal
-        1. Add to Favorites (Favorites Screen)*  
-           - Allow users to save destinations to a personalized favorites list.
-        2. Achievements and Badges (Dashboard Screen)*  
-           - Implement a gamified experience with badges for user milestones.
-        3. Travel Checklist (Checklist Screen)*  
-           - Create a simple tool for packing or to-do lists.
-        4. Share Destinations/Simple Share Function (Destination Details Screen)*  
-           - Users can share destination links or information via social media or messaging apps. 
-           - Generate a shareable link for destinations (via social media or messaging). 
+        
+      1.Users can save destinations to a favorites list.
+
+      2.Users can earn badges for milestones.
+
+      3.Users can create travel checklists for packing or to-do lists.
+
+      4.Users can share destination links via social media or messaging apps.
+
 
