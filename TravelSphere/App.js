@@ -1,20 +1,43 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import HomeScreen from './components/HomeScreen/HomeScreen';
+import DetailsScreen from './components/DetailsScreen/DetailsScreen';
+import SettingsScreen from './components/SettingsScreen/SettingsScreen';
+import { TouchableOpacity } from 'react-native';
+import { Text } from 'react-native';
+import Footer from './components/Footer/Footer';
 
-export default function App() {
+
+const Drawer = createDrawerNavigator();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    <>
+    <NavigationContainer>
+      <Drawer.Navigator initialRouteName="Home">
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+        <Drawer.Screen name="Home" component={HomeScreen} />
+
+        <Drawer.Screen 
+          name="Details" 
+          component={DetailsScreen} 
+          options={({ route, navigation }) => ({
+            drawerItemStyle: route?.params?.isActive ? {} : { display: 'none' },
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Text style={{ fontSize: 18, paddingLeft: 15 }}>← Back</Text>
+              </TouchableOpacity>
+            ),
+          })} 
+        />
+
+        <Drawer.Screen name="Settings" component={SettingsScreen} />
+      </Drawer.Navigator>
+    </NavigationContainer>
+     <Footer />
+     </>
+  );
+};
+
+export default App;
