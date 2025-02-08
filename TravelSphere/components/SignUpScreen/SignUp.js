@@ -1,107 +1,116 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-import { signUpUser, sendEmailVerification, checkEmailVerification } from "../../firebase";
-
+import { auth } from "../../firebase";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import styles from './styles'
 const SignUpScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
-  const [usernameError, setUsernameError] = useState("");
-  const [usernameSuggestions, setUsernameSuggestions] = useState([]);
-
   const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-
   const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
+  const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [verificationMessage, setVerificationMessage] = useState("");
 
-  const trustedDomains = ["gmail.com", "fanshaweonline.ca"];
+  const [isLoading, setIsLoading] = useState(false);
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const domain = email.split("@")[1]?.toLowerCase();
+  const validateInputs = () => {
+    let isValid = true;
 
-    if (!emailRegex.test(email)) {
-      return "Invalid email format. Example: user@gmail.com";
+   // Username Validation
+if (!username) {
+  setUsernameError("Username is required.");
+  isValid = false;
+} else if (username.length > 8) {
+  setUsernameError("Username cannot be more than 8 characters.");
+  isValid = false;
+} else if (!/(?=.*[a-z])(?=.*\d)(?=.*[\W_])/.test(username)) {
+  setUsernameError("Username must contain at least 1 lowercase letter, 1 number, and 1 special character.");
+  isValid = false;
+} else {
+  setUsernameError("");
+}
+
+// ✅ Generate Suggestions if Invalid
+if (!isValid) {
+  const randomSuffix = Math.floor(Math.random() * 1000); // Random number for uniqueness
+  const suggestion1 = `user${randomSuffix}!`; // Example: user123!
+  const suggestion2 = `u${randomSuffix}_pass`; // Example: u789_pass
+  setUsernameError(prevError => `${prevError}\nTry: ${suggestion1} or ${suggestion2}`);
+}
+
+
+    //  Email Validation
+    if (!email) {
+      setEmailError("Email is required.");
+      isValid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setEmailError("Invalid email format. Example: user@gmail.com");
+      isValid = false;
+    } else {
+      setEmailError("");
     }
-    if (!trustedDomains.includes(domain)) {
-      return `Use an email from a trusted domain (${trustedDomains.join(", ")})`;
+
+    // Password Validation
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long.");
+      isValid = false;
+    } else if (!/[A-Z]/.test(password)) {
+      setPasswordError("Password must contain at least one uppercase letter.");
+      isValid = false;
+    } else if (!/[a-z]/.test(password)) {
+      setPasswordError("Password must contain at least one lowercase letter.");
+      isValid = false;
+    } else if (!/[0-9]/.test(password)) {
+      setPasswordError("Password must contain at least one number.");
+      isValid = false;
+    } else if (!/[!@#$%^&*]/.test(password)) {
+      setPasswordError("Password must contain at least one special character (!@#$%^&*).");
+      isValid = false;
+    } else {
+      setPasswordError("");
     }
-    return "";
-  };
 
-  const handleEmailChange = (text) => {
-    setEmail(text);
-    setEmailError(validateEmail(text));
-  };
-
-  const validateUsername = (name) => {
-    const usernameRegex = /^[A-Za-z0-9_]{3,15}$/;
-    const reservedUsernames = ["admin", "tester", "root"];
-    if (reservedUsernames.includes(name.toLowerCase())) {
-      return "This username is reserved. Please choose another.";
+    //  Confirm Password Validation
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match.");
+      isValid = false;
+    } else {
+      setConfirmPasswordError("");
     }
-    if (!usernameRegex.test(name)) {
-      return "Username must be 3-15 characters and can only include letters, numbers, or underscores.";
-    }
-    return "";
-  };
 
-  const generateUsernameSuggestions = (name) => {
-    let base = name.replace(/[^A-Za-z0-9_]/g, "");
-    if (base.length < 3) {
-      base = base.padEnd(3, "1");
-    }
-    return [`${base}_official`, `${base}_123`, `${base}2025`];
-  };
-
-  const handleUsernameChange = (text) => {
-    setUsername(text);
-    const error = validateUsername(text);
-    setUsernameError(error);
-    setUsernameSuggestions(error ? generateUsernameSuggestions(text) : []);
-  };
-
-  const validatePassword = (pass) => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return passwordRegex.test(pass)
-      ? ""
-      : "Password must be at least 8 characters and include uppercase, lowercase, a number, and a special character.";
+    return isValid;
   };
 
   const handleSignUp = async () => {
-    setUsernameError(validateUsername(username));
-    setEmailError(validateEmail(email));
-    setPasswordError(validatePassword(password));
-    setConfirmPasswordError(password !== confirmPassword ? "Passwords do not match." : "");
+    if (!validateInputs()) return;
 
-    if (usernameError || emailError || passwordError || confirmPasswordError) return;
+    setIsLoading(true);
 
-    const result = await signUpUser(email, password);
-    if (result.success) {
-      await sendEmailVerification(); // Send verification email
-      setVerificationMessage(
-        "A verification email has been sent. Please verify your email before logging in."
-      );
-    } else {
-      setEmailError(result.message);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      await sendEmailVerification(user);
+      setVerificationMessage("A verification email has been sent. Please check your inbox.");
+
+      // Check for email verification status every 5 seconds
+      const checkVerified = setInterval(async () => {
+        await user.reload(); // Refresh user data
+        if (user.emailVerified) {
+          clearInterval(checkVerified);
+          setIsLoading(false);
+          navigation.replace("Login"); // Redirect to Login
+        }
+      }, 5000);
+    } catch (error) {
+      setEmailError(error.message);
+      setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      const isVerified = await checkEmailVerification();
-      if (isVerified) {
-        clearInterval(interval);
-        navigation.replace("Login");
-      }
-    }, 5000); // Check every 5 seconds
-
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -110,32 +119,15 @@ const SignUpScreen = ({ navigation }) => {
       <TextInput
         placeholder="Username"
         value={username}
-        onChangeText={handleUsernameChange}
+        onChangeText={setUsername}
         style={styles.input}
       />
       {usernameError ? <Text style={styles.errorText}>{usernameError}</Text> : null}
-      {usernameSuggestions.length > 0 && (
-        <View style={styles.suggestionContainer}>
-          <Text style={styles.suggestionTitle}>Suggestions:</Text>
-          {usernameSuggestions.map((suggestion, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => {
-                setUsername(suggestion);
-                setUsernameError("");
-                setUsernameSuggestions([]);
-              }}
-            >
-              <Text style={styles.suggestionText}>{suggestion}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
 
       <TextInput
         placeholder="Email"
         value={email}
-        onChangeText={handleEmailChange}
+        onChangeText={setEmail}
         style={styles.input}
         keyboardType="email-address"
       />
@@ -144,10 +136,7 @@ const SignUpScreen = ({ navigation }) => {
       <TextInput
         placeholder="Password"
         value={password}
-        onChangeText={(text) => {
-          setPassword(text);
-          setPasswordError(validatePassword(text));
-        }}
+        onChangeText={setPassword}
         secureTextEntry
         style={styles.input}
       />
@@ -156,12 +145,7 @@ const SignUpScreen = ({ navigation }) => {
       <TextInput
         placeholder="Confirm Password"
         value={confirmPassword}
-        onChangeText={(text) => {
-          setConfirmPassword(text);
-          if (confirmPasswordError && text === password) {
-            setConfirmPasswordError("");
-          }
-        }}
+        onChangeText={setConfirmPassword}
         secureTextEntry
         style={styles.input}
       />
@@ -169,10 +153,11 @@ const SignUpScreen = ({ navigation }) => {
 
       {verificationMessage ? <Text style={styles.verificationText}>{verificationMessage}</Text> : null}
 
-      <TouchableOpacity onPress={handleSignUp} style={styles.button}>
-        <Text style={styles.buttonText}>Sign Up</Text>
+      <TouchableOpacity onPress={handleSignUp} style={styles.button} disabled={isLoading}>
+        <Text style={styles.buttonText}>{isLoading ? "Signing Up..." : "Sign Up"}</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
 export default SignUpScreen;

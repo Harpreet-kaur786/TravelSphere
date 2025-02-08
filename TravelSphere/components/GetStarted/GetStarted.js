@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-
+import styles from "./styles";
 const GetStartedScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>

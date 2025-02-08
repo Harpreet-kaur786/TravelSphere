@@ -1,3 +1,5 @@
+
+// firebaseConfig.js
 import { initializeApp } from "firebase/app";
 import { 
   getAuth, 
@@ -7,8 +9,16 @@ import {
   onAuthStateChanged, 
   signOut 
 } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { 
+  getFirestore, 
+  collection, 
+  getDocs, 
+  query, 
+  where, 
+  addDoc 
+} from "firebase/firestore";
 
+// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCuek23DPFdQmInmk4QFGdDlR_ITGS2iuA",
   authDomain: "todoapp-11598.firebaseapp.com",
@@ -18,10 +28,16 @@ const firebaseConfig = {
   appId: "1:732959130893:web:145deb10fa95697e1b9c44",
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const firestore = getFirestore(app);
 
+/* =================== Authentication Functions =================== */
+
+/**
+ * Signs up a user and sends a verification email.
+ */
 const signUpUser = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -39,6 +55,9 @@ const signUpUser = async (email, password) => {
   }
 };
 
+/**
+ * Logs in a user after verifying their email.
+ */
 const loginUser = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -68,10 +87,16 @@ const loginUser = async (email, password) => {
   }
 };
 
+/**
+ * Observes the authentication state.
+ */
 const checkAuthStatus = (callback) => {
   return onAuthStateChanged(auth, callback);
 };
 
+/**
+ * Logs out the current user.
+ */
 const logoutUser = async () => {
   try {
     await signOut(auth);
@@ -81,4 +106,72 @@ const logoutUser = async () => {
   }
 };
 
-export { firestore, auth, signUpUser, loginUser, checkAuthStatus, logoutUser };
+/* =================== Firestore Functions (Destination Storage) =================== */
+
+/**
+ * Adds a new destination to Firestore.
+ */
+const addDestination = async (name, location, description) => {
+  try {
+    await addDoc(collection(firestore, "destinations"), {
+      name,
+      location,
+      description,
+      createdAt: new Date()
+    });
+    return { success: true, message: "Destination added successfully!" };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+};
+
+/**
+ * Retrieves all destinations from Firestore.
+ */
+const getDestinations = async () => {
+  try {
+    const destinationsRef = collection(firestore, "destinations");
+    const destinationsSnapshot = await getDocs(destinationsRef);
+    const destinations = destinationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return { success: true, destinations };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+};
+
+/**
+ * Searches destinations by name.
+ */
+const searchDestination = async (searchQuery) => {
+  try {
+    const destinationsRef = collection(firestore, "destinations");
+    const q = query(destinationsRef, where("name", "==", searchQuery));
+    const querySnapshot = await getDocs(q);
+    const results = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+    if (results.length === 0) {
+      return { success: false, message: "No destinations found." };
+    }
+
+    return { success: true, results };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+};
+
+
+export { 
+  auth, 
+  firestore, 
+  collection, 
+  getDocs, 
+  query, 
+  where, 
+  addDestination, 
+  getDestinations, 
+  searchDestination, 
+  signUpUser, 
+  loginUser, 
+  checkAuthStatus, 
+  logoutUser 
+};

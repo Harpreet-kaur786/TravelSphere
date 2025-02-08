@@ -12,3 +12,5 @@ const styles = StyleSheet.create({
     suggestionTitle: { color: "#007BFF", fontSize: 12, marginBottom: 3 },
     suggestionText: { color: "#007BFF", fontSize: 12, marginBottom: 2 },
   });
+
+  export default styles;

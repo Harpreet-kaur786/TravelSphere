@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextInput, View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
 import { firestore, collection, getDocs, query } from '../../firebase';
 import { AntDesign } from '@expo/vector-icons';
-import styles from './styles'; 
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase';
+import styles from './styles';
 
 const levenshtein = (a, b) => {
   const tmp = [];
   let i, j;
-  for (i = 0; i <= a.length; i++) {
-    tmp[i] = [i];
-  }
-  for (j = 0; j <= b.length; j++) {
-    tmp[0][j] = j;
-  }
+  for (i = 0; i <= a.length; i++) tmp[i] = [i];
+  for (j = 0; j <= b.length; j++) tmp[0][j] = j;
   for (i = 1; i <= a.length; i++) {
     for (j = 1; j <= b.length; j++) {
       tmp[i][j] = Math.min(
@@ -30,31 +28,43 @@ const HomeScreen = ({ navigation }) => {
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSearch = async () => {
-    if (searchTerm.trim() === '') {
-      return;
-    }
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={handleLogout} style={{ marginRight: 15 }}>
+          <AntDesign name="logout" size={24} color="red" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigation.replace('Login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  const handleSearch = async () => {
+    if (searchTerm.trim() === '') return;
     setLoading(true);
     try {
       const q = query(collection(firestore, 'destinations'));
       const querySnapshot = await getDocs(q);
       const destinationsData = querySnapshot.docs.map(doc => doc.data());
-
       const filteredDestinations = destinationsData.filter(destination => {
         const normalizedSearchTerm = searchTerm.toLowerCase().trim();
-
         const nameMatch = levenshtein(destination.name.toLowerCase(), normalizedSearchTerm) <= 3;
         const descriptionMatch = levenshtein(destination.description.toLowerCase(), normalizedSearchTerm) <= 3;
         const countryMatch = destination.country && levenshtein(destination.country.toLowerCase(), normalizedSearchTerm) <= 3;
         const categoryMatch = destination.category && levenshtein(destination.category.toLowerCase(), normalizedSearchTerm) <= 3;
-
         return nameMatch || descriptionMatch || countryMatch || categoryMatch;
       });
-
       setDestinations(filteredDestinations);
     } catch (error) {
-      console.error('Error fetching destinations: ', error);
+      console.error('Error fetching destinations:', error);
     } finally {
       setLoading(false);
     }
@@ -62,7 +72,6 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.input}
@@ -74,9 +83,7 @@ const HomeScreen = ({ navigation }) => {
           <AntDesign name="search1" size={24} color="#4CAF50" />
         </TouchableOpacity>
       </View>
-
       {loading ? <Text>Loading...</Text> : null}
-
       {destinations.length > 0 ? (
         <FlatList
           data={destinations}
