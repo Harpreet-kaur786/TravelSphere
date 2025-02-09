@@ -156,6 +156,9 @@ if (!isValid) {
       <TouchableOpacity onPress={handleSignUp} style={styles.button} disabled={isLoading}>
         <Text style={styles.buttonText}>{isLoading ? "Signing Up..." : "Sign Up"}</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Text style={styles.backText}>← Back</Text>
+      </TouchableOpacity>
     </View>
   );
 };

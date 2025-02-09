@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     verificationText: { color: "green", fontSize: 14, marginBottom: 10, textAlign: "center", width: 280 },
     suggestionContainer: { marginBottom: 10, width: 280 },
     suggestionTitle: { color: "#007BFF", fontSize: 12, marginBottom: 3 },
-    suggestionText: { color: "#007BFF", fontSize: 12, marginBottom: 2 },
+    suggestionText: { color: "#007BFF", fontSize: 12, marginBottom: 2 }, 
   });
 
   export default styles;

@@ -34,11 +34,11 @@ const styles = StyleSheet.create({
       fontWeight: "bold",
       marginTop: 5,
     },
-    backButton: {
-      position: "absolute",
-      top: 40,
-      left: 20,
-    },
+    // backButton: {
+    //   position: "absolute",
+    //   top: 40,
+    //   left: 20,
+    // },
     backText: {
       fontSize: 18,
       color: "#007BFF",
