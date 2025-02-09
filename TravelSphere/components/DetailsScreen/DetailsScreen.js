@@ -20,7 +20,7 @@ const DetailsScreen = ({ route, navigation }) => {
     if (destination['co-ordinates']) {
       const fetchWeather = async () => {
         try {
-          const apiKey = ''; // Ensure this is valid
+          const apiKey = 'bbe8b53d8588c431ef2583584e243046'; // Ensure this is valid
           const response = await axios.get(
             `https://api.openweathermap.org/data/2.5/weather?lat=${destination['co-ordinates'].latitude}&lon=${destination['co-ordinates'].longitude}&appid=${apiKey}&units=metric`
           );
