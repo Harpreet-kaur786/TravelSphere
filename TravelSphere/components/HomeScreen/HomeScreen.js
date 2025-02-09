@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { TextInput, View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
 import { firestore, collection, getDocs, query } from '../../firebase';
 import { AntDesign } from '@expo/vector-icons';
-import styles from './styles'; 
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase';
+import styles from './styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const levenshtein = (a, b) => {
   const tmp = [];
   let i, j;
-  for (i = 0; i <= a.length; i++) {
-    tmp[i] = [i];
-  }
-  for (j = 0; j <= b.length; j++) {
-    tmp[0][j] = j;
-  }
+  for (i = 0; i <= a.length; i++) tmp[i] = [i];
+  for (j = 0; j <= b.length; j++) tmp[0][j] = j;
   for (i = 1; i <= a.length; i++) {
     for (j = 1; j <= b.length; j++) {
       tmp[i][j] = Math.min(
@@ -27,102 +26,118 @@ const levenshtein = (a, b) => {
 
 const HomeScreen = ({ navigation }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [destinations, setDestinations] = useState([]);  // Stores all destinations
-  const [filteredDestinations, setFilteredDestinations] = useState([]); // Stores searched destinations
+  const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [favourites, setFavourites] = useState([]);
 
-  // ✅ Fetch all destinations when the screen loads
   useEffect(() => {
-    const fetchDestinations = async () => {
-      setLoading(true);
-      try {
-        const q = query(collection(firestore, 'destinations'));
-        const querySnapshot = await getDocs(q);
-        const destinationsData = querySnapshot.docs.map(doc => doc.data());
-
-        setDestinations(destinationsData); // Store all destinations
-        setFilteredDestinations(destinationsData); // Initially show all destinations
-      } catch (error) {
-        console.error('Error fetching destinations: ', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDestinations();
-  }, []);
-
-  // ✅ Filter destinations based on search
-  const handleSearch = () => {
-    if (searchTerm.trim() === '') {
-      setFilteredDestinations(destinations); // Show all if search is empty
-      return;
-    }
-
-    const normalizedSearchTerm = searchTerm.toLowerCase().trim();
-
-    const filtered = destinations.filter(destination => {
-      // Case-insensitive search for name, description, country, and category
-      const nameMatch = destination.name && levenshtein(destination.name.toLowerCase(), normalizedSearchTerm) <= 3;
-      const descriptionMatch = destination.description && levenshtein(destination.description.toLowerCase(), normalizedSearchTerm) <= 3;
-      const countryMatch = destination.country && levenshtein(destination.country.toLowerCase(), normalizedSearchTerm) <= 3;
-      const categoryMatch = destination.category && levenshtein(destination.category.toLowerCase(), normalizedSearchTerm) <= 3;
-
-      return nameMatch || descriptionMatch || countryMatch || categoryMatch;
+    navigation.setOptions({
+      headerRight: () => (
+        <>
+        <TouchableOpacity onPress={handleLogout} style={{ marginRight: 15 }}>
+          <AntDesign name="logout" size={24} color="red" />
+        </TouchableOpacity>
+        {/* Favourite Button */}
+        <TouchableOpacity onPress={() => navigation.navigate('Favourite')} style={{ marginRight: 15 }}>
+            <AntDesign name="heart" size={24} color="red" />
+          </TouchableOpacity>
+          </>
+      ),
     });
+  }, [navigation]);
 
-    setFilteredDestinations(filtered);
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigation.replace('Login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+  useEffect(() => {
+    loadFavourites();
+  }, []);
+  
+  const loadFavourites = async () => {
+    try {
+      const favs = await AsyncStorage.getItem('favourites');
+      if (favs) {
+        setFavourites(JSON.parse(favs));
+      }
+    } catch (error) {
+      console.error('Error loading favourites:', error);
+    }
+  };
+  
+  const toggleFavourite = async (item) => {
+    let updatedFavourites = [...favourites];
+    const index = updatedFavourites.findIndex(fav => fav.name === item.name);
+    
+    if (index === -1) {
+      updatedFavourites.push(item); // Add if not in favourites
+    } else {
+      updatedFavourites.splice(index, 1); // Remove if already in favourites
+    }
+  
+    setFavourites(updatedFavourites);
+    await AsyncStorage.setItem('favourites', JSON.stringify(updatedFavourites));
+  };
+  const handleSearch = async () => {
+    if (searchTerm.trim() === '') return;
+    setLoading(true);
+    try {
+      const q = query(collection(firestore, 'destinations'));
+      const querySnapshot = await getDocs(q);
+      const destinationsData = querySnapshot.docs.map(doc => doc.data());
+      const filteredDestinations = destinationsData.filter(destination => {
+        const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+        const nameMatch = levenshtein(destination.name.toLowerCase(), normalizedSearchTerm) <= 3;
+        const descriptionMatch = levenshtein(destination.description.toLowerCase(), normalizedSearchTerm) <= 3;
+        const countryMatch = destination.country && levenshtein(destination.country.toLowerCase(), normalizedSearchTerm) <= 3;
+        const categoryMatch = destination.category && levenshtein(destination.category.toLowerCase(), normalizedSearchTerm) <= 3;
+        return nameMatch || descriptionMatch || countryMatch || categoryMatch;
+      });
+      setDestinations(filteredDestinations);
+    } catch (error) {
+      console.error('Error fetching destinations:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <View style={styles.container}>
-
-      {/* 🔍 Search Bar */}
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.input}
           placeholder="Search for destinations"
           value={searchTerm}
-          onChangeText={text => {
-            setSearchTerm(text);
-            handleSearch();
-          }}
+          onChangeText={setSearchTerm}
         />
         <TouchableOpacity onPress={handleSearch} style={styles.searchIcon}>
           <AntDesign name="search1" size={24} color="#4CAF50" />
         </TouchableOpacity>
       </View>
-
-      {/* ⏳ Show Loading Indicator */}
       {loading ? <Text>Loading...</Text> : null}
-
-      {/* 🏝️ Display Destinations */}
-      {filteredDestinations.length > 0 ? (
+      {destinations.length > 0 ? (
         <FlatList
-          data={filteredDestinations}
+          data={destinations}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <View style={styles.card}>
-              {/* ✅ Display Image Correctly */}
-              {Array.isArray(item.image) && item.image.length > 0 ? (
-                <Image source={{ uri: item.image[0] }} style={styles.image} />
-              ) : item.image ? (
-                <Image source={{ uri: item.image }} style={styles.image} />
-              ) : (
-                <Image 
-                  source={{ uri: 'https://via.placeholder.com/150' }} 
-                  style={styles.image} 
-                />
-              )}
-
+              <Image source={{ uri: item.image }} style={styles.image} />
               <View style={styles.cardContent}>
                 <Text style={styles.title}>{item.name}</Text>
-                <Text style={styles.category}>Category: {item.category}</Text>
-                <Text style={styles.country}>Country: {item.country}</Text>
+                <Text style={styles.description}>{item.description}</Text>
                 <TouchableOpacity 
                   style={styles.detailsLink} 
                   onPress={() => navigation.navigate('Details', { item })}
                 >
+                   <AntDesign 
+                      name={favourites.some(fav => fav.name === item.name) ? 'heart' : 'hearto'} 
+                      size={20} 
+                      color="#FF6347" 
+                    />
                   <AntDesign name="plus" size={16} color="#4CAF50" />
                   <Text style={styles.detailsText}> View Details</Text>
                 </TouchableOpacity>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator ,TouchableOpacity} from 'react-native';
 import Swiper from 'react-native-swiper';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 
 const DetailsScreen = ({ route, navigation }) => {

@@ -1,42 +1,57 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeScreen from './components/HomeScreen/HomeScreen';
 import DetailsScreen from './components/DetailsScreen/DetailsScreen';
 import SettingsScreen from './components/SettingsScreen/SettingsScreen';
-import { TouchableOpacity } from 'react-native';
-import { Text } from 'react-native';
 import Footer from './components/Footer/Footer';
+import GetStartedScreen from './components/GetStarted/GetStarted';
+import LoginScreen from './components/LoginScreen/LoginScreen';
+import SignUpScreen from './components/SignUpScreen/SignUp';
+import { TouchableOpacity, Text } from 'react-native';
+import FavouriteScreen from './components/FavouriteScreen/FavouriteScreen';
 
-
+const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
+// Drawer Navigator (Without Details)
+function DrawerNavigator() {
+  return (
+    <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Settings" component={SettingsScreen} />
+      <Drawer.Screen name='Favourite' component={FavouriteScreen}/>
+    </Drawer.Navigator>
+  );
+}
+
+// Stack Navigator (Includes Details)
 const App = () => {
   return (
     <>
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home">
-
-        <Drawer.Screen name="Home" component={HomeScreen} />
-
-        <Drawer.Screen 
-          name="Details" 
-          component={DetailsScreen} 
-          options={({ route, navigation }) => ({
-            drawerItemStyle: route?.params?.isActive ? {} : { display: 'none' },
-            headerLeft: () => (
-              <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Text style={{ fontSize: 18, paddingLeft: 15 }}>← Back</Text>
-              </TouchableOpacity>
-            ),
-          })} 
-        />
-
-        <Drawer.Screen name="Settings" component={SettingsScreen} />
-      </Drawer.Navigator>
-    </NavigationContainer>
-     <Footer />
-     </>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="GetStarted" screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="GetStarted" component={GetStartedScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="SignUp" component={SignUpScreen} />
+          <Stack.Screen name="Home" component={DrawerNavigator} />
+          <Stack.Screen 
+            name="Details" 
+            component={DetailsScreen} 
+            options={({ navigation }) => ({
+              headerShown: true,
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <Text style={{ fontSize: 18, paddingLeft: 15 }}>← Back</Text>
+                </TouchableOpacity>
+              ),
+            })}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+      <Footer />
+    </>
   );
 };
 

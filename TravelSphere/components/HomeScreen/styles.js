@@ -19,8 +19,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     paddingLeft: 10,
-    fontSize: 16,
-    color: '#333',
   },
   searchIcon: {
     padding: 10,
@@ -46,27 +44,14 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#006A4E',
-    marginBottom: 5,
-    fontFamily: 'Georgia',
+    color: '#333',
   },
-  category: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#2B65EC',
+  description: {
+    fontSize: 14,
+    color: '#666',
     marginTop: 5,
-    marginBottom: 5,
-    fontFamily: 'Palatino', // Add a beautiful font here
-  },
-  country: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#2B65EC',
-    marginTop: 5,
-    marginBottom: 5,
-    fontFamily: 'Palatino', // Add a beautiful font here
   },
   detailsLink: {
     flexDirection: 'row',
