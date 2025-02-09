@@ -52,7 +52,7 @@ Features List:
 
 2. Monika Bhalla
 
-      1.Users can view destination details, including descriptions, images, and attractions.
+      1.Users can view destination details, including descriptions, Images, and attractions.
 
       2.Users can leave reviews and ratings for destinations.
 
