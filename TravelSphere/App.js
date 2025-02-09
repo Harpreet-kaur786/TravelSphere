@@ -10,6 +10,7 @@ import GetStartedScreen from './components/GetStarted/GetStarted';
 import LoginScreen from './components/LoginScreen/LoginScreen';
 import SignUpScreen from './components/SignUpScreen/SignUp';
 import { TouchableOpacity, Text } from 'react-native';
+import FavouriteScreen from './components/FavouriteScreen/FavouriteScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -20,6 +21,7 @@ function DrawerNavigator() {
     <Drawer.Navigator initialRouteName="Home">
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
+      <Drawer.Screen name='Favourite' component={FavouriteScreen}/>
     </Drawer.Navigator>
   );
 }

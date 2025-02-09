@@ -5,6 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import styles from './styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const levenshtein = (a, b) => {
   const tmp = [];
@@ -27,13 +28,20 @@ const HomeScreen = ({ navigation }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [favourites, setFavourites] = useState([]);
 
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
+        <>
         <TouchableOpacity onPress={handleLogout} style={{ marginRight: 15 }}>
           <AntDesign name="logout" size={24} color="red" />
         </TouchableOpacity>
+        {/* Favourite Button */}
+        <TouchableOpacity onPress={() => navigation.navigate('Favourite')} style={{ marginRight: 15 }}>
+            <AntDesign name="heart" size={24} color="red" />
+          </TouchableOpacity>
+          </>
       ),
     });
   }, [navigation]);
@@ -46,7 +54,34 @@ const HomeScreen = ({ navigation }) => {
       console.error('Logout failed:', error);
     }
   };
-
+  useEffect(() => {
+    loadFavourites();
+  }, []);
+  
+  const loadFavourites = async () => {
+    try {
+      const favs = await AsyncStorage.getItem('favourites');
+      if (favs) {
+        setFavourites(JSON.parse(favs));
+      }
+    } catch (error) {
+      console.error('Error loading favourites:', error);
+    }
+  };
+  
+  const toggleFavourite = async (item) => {
+    let updatedFavourites = [...favourites];
+    const index = updatedFavourites.findIndex(fav => fav.name === item.name);
+    
+    if (index === -1) {
+      updatedFavourites.push(item); // Add if not in favourites
+    } else {
+      updatedFavourites.splice(index, 1); // Remove if already in favourites
+    }
+  
+    setFavourites(updatedFavourites);
+    await AsyncStorage.setItem('favourites', JSON.stringify(updatedFavourites));
+  };
   const handleSearch = async () => {
     if (searchTerm.trim() === '') return;
     setLoading(true);
@@ -98,6 +133,11 @@ const HomeScreen = ({ navigation }) => {
                   style={styles.detailsLink} 
                   onPress={() => navigation.navigate('Details', { item })}
                 >
+                   <AntDesign 
+                      name={favourites.some(fav => fav.name === item.name) ? 'heart' : 'hearto'} 
+                      size={20} 
+                      color="#FF6347" 
+                    />
                   <AntDesign name="plus" size={16} color="#4CAF50" />
                   <Text style={styles.detailsText}> View Details</Text>
                 </TouchableOpacity>

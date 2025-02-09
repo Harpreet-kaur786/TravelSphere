@@ -11,7 +11,8 @@ const StackNavigator = () => {
 
       <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />  
       <Stack.Screen name="Details" component={DetailsScreen} options={{ headerShown: true }} />
-    </Stack.Navigator>
+     <Stack.Screen name="Favourite" component={FavouriteScreen} options={{headerShown:true}}/>
+     </Stack.Navigator>
   );
 };
 
