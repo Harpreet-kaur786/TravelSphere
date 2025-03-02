@@ -29,6 +29,12 @@ const HomeScreen = ({ navigation }) => {
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [favourites, setFavourites] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('');
+  //const [selectedSorting, setSelectedSorting] = useState('');
+  const [allDestinations, setAllDestinations] = useState([]);
+  const [filterVisible, setFilterVisible] = useState(false); // Filter visibility state
+  const [resetItems,setResetItems] = useState([]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -82,27 +88,68 @@ const HomeScreen = ({ navigation }) => {
     setFavourites(updatedFavourites);
     await AsyncStorage.setItem('favourites', JSON.stringify(updatedFavourites));
   };
+
   const handleSearch = async () => {
-    if (searchTerm.trim() === '') return;
+    if (searchTerm.trim() === '') {
+      return;
+    }
+
     setLoading(true);
     try {
       const q = query(collection(firestore, 'destinations'));
       const querySnapshot = await getDocs(q);
       const destinationsData = querySnapshot.docs.map(doc => doc.data());
+      setAllDestinations(destinationsData);
+
       const filteredDestinations = destinationsData.filter(destination => {
         const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+
         const nameMatch = levenshtein(destination.name.toLowerCase(), normalizedSearchTerm) <= 3;
         const descriptionMatch = levenshtein(destination.description.toLowerCase(), normalizedSearchTerm) <= 3;
         const countryMatch = destination.country && levenshtein(destination.country.toLowerCase(), normalizedSearchTerm) <= 3;
         const categoryMatch = destination.category && levenshtein(destination.category.toLowerCase(), normalizedSearchTerm) <= 3;
+
         return nameMatch || descriptionMatch || countryMatch || categoryMatch;
       });
+
       setDestinations(filteredDestinations);
+      setFilterVisible(true); // Show filter section after search
+      setResetItems(filteredDestinations);
     } catch (error) {
-      console.error('Error fetching destinations:', error);
+      console.error('Error fetching destinations: ', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  
+
+  const handleFilterChange = () => {
+    let filtered = [...allDestinations];
+
+    // Filter by category
+    if (selectedCategory) {
+      filtered = filtered.filter(destination => destination.category === selectedCategory.toLowerCase());
+    }
+
+    // Filter by country
+    if (selectedCountry) {
+      filtered = filtered.filter(destination => destination.country === selectedCountry.toLowerCase());
+    }
+
+    setDestinations(filtered);
+  };
+
+  const toggleFilter = () => {
+    setFilterVisible(!filterVisible);
+  };
+
+  const resetFilters = () => {
+    setSelectedCategory('');
+    setSelectedCountry('');
+    //setSelectedSorting('');
+    //setDestinations(allDestinations);
+    setDestinations(resetItems);
   };
 
   return (
@@ -118,6 +165,89 @@ const HomeScreen = ({ navigation }) => {
           <AntDesign name="search1" size={24} color="#4CAF50" />
         </TouchableOpacity>
       </View>
+
+      {/* Filter section */}
+      <View style={styles.filterContainer}>
+        {/* Filter title and toggle button
+        <View style={styles.filterTitleContainer}>
+          <Text style={styles.filterTitle}>Filter</Text>
+          <TouchableOpacity onPress={toggleFilter} style={styles.filterToggle}>
+            <AntDesign name={filterVisible ? 'minus' : 'plus'} size={24} color="#4CAF50" />
+          </TouchableOpacity>
+        </View> */}
+        <View style={styles.filterTitleContainer}>
+  <Text style={styles.filterTitle}>Filter</Text>
+  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <TouchableOpacity onPress={resetFilters} style={styles.filterToggle}>
+      <AntDesign name={filterVisible ? 'reload1' : ''} size={18} color="#4CAF50" />
+    </TouchableOpacity>
+    <TouchableOpacity onPress={toggleFilter} style={styles.filterToggle}>
+      <AntDesign name={filterVisible ? 'minus' : 'plus'} size={24} color="#4CAF50" />
+    </TouchableOpacity>
+  </View>
+</View>
+
+
+        {filterVisible && (
+          <>
+            {/* Filter fields */}
+            <Picker
+              selectedValue={selectedCountry}
+              style={styles.picker}
+              onValueChange={(itemValue) => setSelectedCountry(itemValue)}
+            >
+              <Picker.Item label="Select Country" value="" />
+              <Picker.Item label="India" value="India" />
+              <Picker.Item label="Australia" value="Australia" />
+              <Picker.Item label="France" value="France" />
+            </Picker>
+
+            <Picker
+              selectedValue={selectedCategory}
+              style={styles.picker}
+              onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+            >
+              <Picker.Item label="Select Category" value="" />
+              <Picker.Item label="Beach" value="Beach" />
+              <Picker.Item label="Nature" value="Nature" />
+              <Picker.Item label="Historical" value="Historical" />
+              <Picker.Item label="Adventure" value="Adventure" />
+              <Picker.Item label="Cultural" value="Cultural" />
+              <Picker.Item label="Urban" value="Urban" />
+              <Picker.Item label="Spiritual" value="Spiritual" />
+              <Picker.Item label="Artistic" value="Artistic" />
+              <Picker.Item label="Romantic" value="Romantic" />
+              <Picker.Item label="Amusement Park" value="Amusement Park" />
+              <Picker.Item label="Unique Stay" value="Unique Stay" />
+            </Picker>
+
+            {/* <Picker
+              selectedValue={selectedSorting}
+              style={styles.picker}
+              onValueChange={(itemValue) => setSelectedSorting(itemValue)}
+            >
+              <Picker.Item label="Sort By" value="" />
+              <Picker.Item label="Rating" value="rating" />
+              <Picker.Item label="Popularity" value="popularity" />
+            </Picker> */}
+
+            {/* Reset button with loading indicator
+            <TouchableOpacity onPress={resetFilters} style={styles.resetButton}>
+              {loading ? (
+                <AntDesign name="loading1" size={24} color="#fff" />
+              ) : (
+                <Text style={styles.applyText}>Reset</Text>
+              )}
+            </TouchableOpacity> */}
+
+            {/* Apply button */}
+            <TouchableOpacity onPress={handleFilterChange} style={styles.applyButton}>
+              <Text style={styles.applyText}>Apply</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
+
       {loading ? <Text>Loading...</Text> : null}
       {destinations.length > 0 ? (
         <FlatList
