@@ -12,6 +12,7 @@ import {Button} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage"
 
+const storage = getStorage();
 const levenshtein = (a, b) => {
   const tmp = [];
   let i, j;
@@ -116,6 +117,68 @@ const HomeScreen = ({ navigation }) => {
     setIsEditingProfile(false);
   };
 
+  const handleImagePicker = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+  
+    if (!result.canceled && result.assets.length > 0) {
+      // Update the state with the selected image URI
+      const selectedUri = result.assets[0].uri;
+      console.log('Selected Image URI:', selectedUri);
+      
+      // Set the preview URI for the profile photo
+      setNewProfilePhoto(selectedUri); 
+    }
+  };
+
+
+  const saveUserProfile = async (name, photoUrl) => {
+    const profileData = { name, photoUrl };
+    await AsyncStorage.setItem('userProfile', JSON.stringify(profileData));
+    setUserName(name); // Update the name immediately in the state
+    setUserProfilePhoto(photoUrl); // Update the photo immediately in the state
+  };
+
+   
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigation.replace('Login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+  useEffect(() => {
+    loadFavourites();
+  }, []);
+  
+  const loadFavourites = async () => {
+    try {
+      const favs = await AsyncStorage.getItem('favourites');
+      if (favs) {
+        setFavourites(JSON.parse(favs));
+      }
+    } catch (error) {
+      console.error('Error loading favourites:', error);
+    }
+  };
+  
+  const toggleFavourite = async (item) => {
+    let updatedFavourites = [...favourites];
+    const index = updatedFavourites.findIndex(fav => fav.name === item.name);
+    
+    if (index === -1) {
+      updatedFavourites.push(item); // Add if not in favourites
+    } else {
+      updatedFavourites.splice(index, 1); // Remove if already in favourites
+    }
+  
+    setFavourites(updatedFavourites);
+    await AsyncStorage.setItem('favourites', JSON.stringify(updatedFavourites));
+  };
 
   const handleSearch = async () => {
     if (searchTerm.trim() === '') {
@@ -215,6 +278,42 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+     
+   <View style={styles.profileContainer}>
+   <Image
+     source={newProfilePhoto ? { uri: newProfilePhoto } : require('../../assets/favicon.png')}
+      style={styles.profileImage}
+/>
+<Text style={styles.profileName}>{userName}</Text>
+        <TouchableOpacity onPress={handleEditProfile} style={styles.editButton}>
+          <AntDesign name="edit" size={24} color="blue" />
+        </TouchableOpacity>
+      </View>
+      <Modal visible={isEditingProfile} animationType="slide" onRequestClose={() => setIsEditingProfile(false)}>
+  <View style={styles.modalContainer}>
+    <TextInput
+      style={styles.input}
+      placeholder="Enter your name"
+      value={newName}
+      onChangeText={setNewName} 
+    />
+     
+    {/* Display the preview of the selected image */}
+    <View style={styles.profileImagePreviewContainer}>
+      <Image 
+        source={{ uri: newProfilePhoto || userProfilePhoto || 'https://placekitten.com/200/200' }} 
+        style={styles.profileImageModal}
+      />
+    </View>
+    <TouchableOpacity style={styles.uploadButton} onPress={handleImagePicker}>
+      <Text style={styles.uploadButtonText}>Change Profile Picture</Text>
+    </TouchableOpacity>
+
+    {/* Save Button */}
+    <Button title="Save" onPress={handleSaveProfile} />
+    <Button title="Cancel" onPress={() => setIsEditingProfile(false)} />
+  </View>
+</Modal>
 
       {/* Search bar */}
       <View style={styles.searchContainer}>
