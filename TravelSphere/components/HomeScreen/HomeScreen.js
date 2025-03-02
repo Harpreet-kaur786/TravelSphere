@@ -147,8 +147,6 @@ const HomeScreen = ({ navigation }) => {
   const resetFilters = () => {
     setSelectedCategory('');
     setSelectedCountry('');
-    //setSelectedSorting('');
-    //setDestinations(allDestinations);
     setDestinations(resetItems);
   };
 
@@ -168,13 +166,7 @@ const HomeScreen = ({ navigation }) => {
 
       {/* Filter section */}
       <View style={styles.filterContainer}>
-        {/* Filter title and toggle button
-        <View style={styles.filterTitleContainer}>
-          <Text style={styles.filterTitle}>Filter</Text>
-          <TouchableOpacity onPress={toggleFilter} style={styles.filterToggle}>
-            <AntDesign name={filterVisible ? 'minus' : 'plus'} size={24} color="#4CAF50" />
-          </TouchableOpacity>
-        </View> */}
+
         <View style={styles.filterTitleContainer}>
   <Text style={styles.filterTitle}>Filter</Text>
   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -220,25 +212,6 @@ const HomeScreen = ({ navigation }) => {
               <Picker.Item label="Amusement Park" value="Amusement Park" />
               <Picker.Item label="Unique Stay" value="Unique Stay" />
             </Picker>
-
-            {/* <Picker
-              selectedValue={selectedSorting}
-              style={styles.picker}
-              onValueChange={(itemValue) => setSelectedSorting(itemValue)}
-            >
-              <Picker.Item label="Sort By" value="" />
-              <Picker.Item label="Rating" value="rating" />
-              <Picker.Item label="Popularity" value="popularity" />
-            </Picker> */}
-
-            {/* Reset button with loading indicator
-            <TouchableOpacity onPress={resetFilters} style={styles.resetButton}>
-              {loading ? (
-                <AntDesign name="loading1" size={24} color="#fff" />
-              ) : (
-                <Text style={styles.applyText}>Reset</Text>
-              )}
-            </TouchableOpacity> */}
 
             {/* Apply button */}
             <TouchableOpacity onPress={handleFilterChange} style={styles.applyButton}>
