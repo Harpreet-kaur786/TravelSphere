@@ -6,12 +6,17 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Picker} from '@react-native-picker/picker';
 
 const levenshtein = (a, b) => {
   const tmp = [];
   let i, j;
-  for (i = 0; i <= a.length; i++) tmp[i] = [i];
-  for (j = 0; j <= b.length; j++) tmp[0][j] = j;
+  for (i = 0; i <= a.length; i++) {
+    tmp[i] = [i];
+  }
+  for (j = 0; j <= b.length; j++) {
+    tmp[0][j] = j;
+  }
   for (i = 1; i <= a.length; i++) {
     for (j = 1; j <= b.length; j++) {
       tmp[i][j] = Math.min(
@@ -26,68 +31,17 @@ const levenshtein = (a, b) => {
 
 const HomeScreen = ({ navigation }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [destinations, setDestinations] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [favourites, setFavourites] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
-  //const [selectedSorting, setSelectedSorting] = useState('');
+  const [selectedSorting, setSelectedSorting] = useState('');
+  const [destinations, setDestinations] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [allDestinations, setAllDestinations] = useState([]);
   const [filterVisible, setFilterVisible] = useState(false); // Filter visibility state
   const [resetItems,setResetItems] = useState([]);
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <>
-        <TouchableOpacity onPress={handleLogout} style={{ marginRight: 15 }}>
-          <AntDesign name="logout" size={24} color="red" />
-        </TouchableOpacity>
-        {/* Favourite Button */}
-        <TouchableOpacity onPress={() => navigation.navigate('Favourite')} style={{ marginRight: 15 }}>
-            <AntDesign name="heart" size={24} color="red" />
-          </TouchableOpacity>
-          </>
-      ),
-    });
-  }, [navigation]);
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigation.replace('Login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-  useEffect(() => {
-    loadFavourites();
-  }, []);
-  
-  const loadFavourites = async () => {
-    try {
-      const favs = await AsyncStorage.getItem('favourites');
-      if (favs) {
-        setFavourites(JSON.parse(favs));
-      }
-    } catch (error) {
-      console.error('Error loading favourites:', error);
-    }
-  };
-  
-  const toggleFavourite = async (item) => {
-    let updatedFavourites = [...favourites];
-    const index = updatedFavourites.findIndex(fav => fav.name === item.name);
-    
-    if (index === -1) {
-      updatedFavourites.push(item); // Add if not in favourites
-    } else {
-      updatedFavourites.splice(index, 1); // Remove if already in favourites
-    }
-  
-    setFavourites(updatedFavourites);
-    await AsyncStorage.setItem('favourites', JSON.stringify(updatedFavourites));
-  };
+  const [selectedRating,setSelectedRating] = useState('');
+  const [selectedPopularity, setSelectedPopularity] = useState('');
+  const [searchFilterDestinations, setSearchFilterDestinations] = useState([]);
 
   const handleSearch = async () => {
     if (searchTerm.trim() === '') {
@@ -108,11 +62,14 @@ const HomeScreen = ({ navigation }) => {
         const descriptionMatch = levenshtein(destination.description.toLowerCase(), normalizedSearchTerm) <= 3;
         const countryMatch = destination.country && levenshtein(destination.country.toLowerCase(), normalizedSearchTerm) <= 3;
         const categoryMatch = destination.category && levenshtein(destination.category.toLowerCase(), normalizedSearchTerm) <= 3;
+        // const popularity = destination.popularity;
+        // const rating = destination.rating;
 
         return nameMatch || descriptionMatch || countryMatch || categoryMatch;
       });
 
       setDestinations(filteredDestinations);
+      setSearchFilterDestinations(filteredDestinations);
       setFilterVisible(true); // Show filter section after search
       setResetItems(filteredDestinations);
     } catch (error) {
@@ -122,20 +79,38 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  
-
   const handleFilterChange = () => {
-    let filtered = [...allDestinations];
+    // let filtered = [...allDestinations];
+    let filtered = [...searchFilterDestinations];
+
+    // Filter by country
+    if (selectedCountry) {
+      filtered = filtered.filter(destination => destination.country === selectedCountry.toLowerCase());
+    }
 
     // Filter by category
     if (selectedCategory) {
       filtered = filtered.filter(destination => destination.category === selectedCategory.toLowerCase());
     }
 
-    // Filter by country
-    if (selectedCountry) {
-      filtered = filtered.filter(destination => destination.country === selectedCountry.toLowerCase());
+    
+    // Filter by popularity (if selected)
+    if (selectedPopularity) {
+      filtered = filtered.filter(destination => destination.popularity.toString() === selectedPopularity);
     }
+
+    // Filter by rating (if selected)
+    if (selectedRating) {
+      filtered = filtered.filter(destination => destination.rating.toString() === selectedRating);
+    }
+
+
+    // // Sorting by rating or popularity
+    // if (selectedSorting === 'rating') {
+    //   filtered = filtered.sort((a, b) => b.rating - a.rating); // Descending order by rating
+    // } else if (selectedSorting === 'popularity') {
+    //   filtered = filtered.sort((a, b) => a.popularity - b.popularity); // Ascending order by popularity
+    // }
 
     setDestinations(filtered);
   };
@@ -147,12 +122,31 @@ const HomeScreen = ({ navigation }) => {
   const resetFilters = () => {
     setSelectedCategory('');
     setSelectedCountry('');
+    setSelectedSorting('');
+    setSelectedPopularity('');
+    setSelectedRating('');
+    //setDestinations(allDestinations);
     setDestinations(resetItems);
+  };
+  const resetSearch = () => {
+    setSearchTerm('');
+    setSelectedCategory('');
+    setSelectedCountry('');
+    setSelectedPopularity('');
+    setSelectedRating('');
+    setSelectedSorting('');
+    setDestinations([]);
+    setFilterVisible(false);
   };
 
   return (
     <View style={styles.container}>
+
+      {/* Search bar */}
       <View style={styles.searchContainer}>
+      <TouchableOpacity onPress={resetSearch} style={styles.searchIcon}>
+      <AntDesign name="reload1" size={18} color="#4CAF50" />
+    </TouchableOpacity>
         <TextInput
           style={styles.input}
           placeholder="Search for destinations"
@@ -162,11 +156,18 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity onPress={handleSearch} style={styles.searchIcon}>
           <AntDesign name="search1" size={24} color="#4CAF50" />
         </TouchableOpacity>
+      
       </View>
 
       {/* Filter section */}
       <View style={styles.filterContainer}>
-
+        {/* Filter title and toggle button
+        <View style={styles.filterTitleContainer}>
+          <Text style={styles.filterTitle}>Filter</Text>
+          <TouchableOpacity onPress={toggleFilter} style={styles.filterToggle}>
+            <AntDesign name={filterVisible ? 'minus' : 'plus'} size={24} color="#4CAF50" />
+          </TouchableOpacity>
+        </View> */}
         <View style={styles.filterTitleContainer}>
   <Text style={styles.filterTitle}>Filter</Text>
   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -213,6 +214,50 @@ const HomeScreen = ({ navigation }) => {
               <Picker.Item label="Unique Stay" value="Unique Stay" />
             </Picker>
 
+            <Picker
+              selectedValue={selectedRating}
+              style={styles.picker}
+              onValueChange={(itemValue) => setSelectedRating(itemValue)}
+            >
+              <Picker.Item label="Select By Rating" value="" />
+              <Picker.Item label="⭐⭐⭐⭐⭐" value="5" />
+              <Picker.Item label="⭐⭐⭐⭐" value="4" />
+              <Picker.Item label="⭐⭐⭐" value="3" />
+              <Picker.Item label="⭐⭐" value="2" />
+              <Picker.Item label="⭐" value="1" />
+            </Picker>
+
+            <Picker
+              selectedValue={selectedPopularity}
+              style={styles.picker}
+              onValueChange={(itemValue) => setSelectedPopularity(itemValue)}
+            >
+              <Picker.Item label="Select By Popularity" value="" />
+              <Picker.Item label="Trending" value="1" />
+              <Picker.Item label="Famous Spots" value="2" />
+              <Picker.Item label="Hidden Gems" value="3" />
+
+            </Picker>
+
+            {/* <Picker
+              selectedValue={selectedSorting}
+              style={styles.picker}
+              onValueChange={(itemValue) => setSelectedSorting(itemValue)}
+            >
+              <Picker.Item label="Sort By" value="" />
+              <Picker.Item label="Rating" value="rating" />
+              <Picker.Item label="Popularity" value="popularity" />
+            </Picker> */}
+
+            {/* Reset button with loading indicator
+            <TouchableOpacity onPress={resetFilters} style={styles.resetButton}>
+              {loading ? (
+                <AntDesign name="loading1" size={24} color="#fff" />
+              ) : (
+                <Text style={styles.applyText}>Reset</Text>
+              )}
+            </TouchableOpacity> */}
+
             {/* Apply button */}
             <TouchableOpacity onPress={handleFilterChange} style={styles.applyButton}>
               <Text style={styles.applyText}>Apply</Text>
@@ -221,7 +266,10 @@ const HomeScreen = ({ navigation }) => {
         )}
       </View>
 
+      {/* Loading Indicator */}
       {loading ? <Text>Loading...</Text> : null}
+
+      {/* List of destinations */}
       {destinations.length > 0 ? (
         <FlatList
           data={destinations}
@@ -236,11 +284,6 @@ const HomeScreen = ({ navigation }) => {
                   style={styles.detailsLink} 
                   onPress={() => navigation.navigate('Details', { item })}
                 >
-                   <AntDesign 
-                      name={favourites.some(fav => fav.name === item.name) ? 'heart' : 'hearto'} 
-                      size={20} 
-                      color="#FF6347" 
-                    />
                   <AntDesign name="plus" size={16} color="#4CAF50" />
                   <Text style={styles.detailsText}> View Details</Text>
                 </TouchableOpacity>
