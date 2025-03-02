@@ -78,12 +78,43 @@ const HomeScreen = ({ navigation }) => {
       });
     }
   }, [user]);
-  
+
   const handleEditProfile = () => {
     setNewName(userName); // Ensure the input field shows the current name
     setIsEditingProfile(true); // Enable editing mode
   };
   
+    
+  const handleSaveProfile = async () => {
+    // Save the name first
+    await saveUserProfile(newName, newProfilePhoto || userProfilePhoto);
+  
+    // If a new profile photo is selected, upload it
+    if (newProfilePhoto) {
+      const response = await fetch(newProfilePhoto);
+      const blob = await response.blob();
+    
+      const storageRef = ref(storage, `profilePhotos/${user.uid}`);
+      const uploadTask = uploadBytesResumable(storageRef, blob);
+    
+      uploadTask.on(
+        'state_changed',
+        null,
+        (error) => console.error('Upload error: ', error),
+        async () => {
+          const photoURL = await getDownloadURL(uploadTask.snapshot.ref);
+          // Save both name and photoURL
+          await saveUserProfile(newName, photoURL);
+          setUserProfilePhoto(photoURL); // Update the profile image state
+        }
+      );
+    } else {
+      // If no new photo, just save the current photo and name
+      await saveUserProfile(newName, userProfilePhoto);
+    }
+    
+    setIsEditingProfile(false);
+  };
 
 
   const handleSearch = async () => {
