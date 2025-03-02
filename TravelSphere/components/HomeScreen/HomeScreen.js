@@ -7,6 +7,10 @@ import { auth } from '../../firebase';
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Picker} from '@react-native-picker/picker';
+import {Modal} from 'react-native';
+import {Button} from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage"
 
 const levenshtein = (a, b) => {
   const tmp = [];
@@ -42,6 +46,45 @@ const HomeScreen = ({ navigation }) => {
   const [selectedRating,setSelectedRating] = useState('');
   const [selectedPopularity, setSelectedPopularity] = useState('');
   const [searchFilterDestinations, setSearchFilterDestinations] = useState([]);
+  const [userName, setUserName] = useState('Default Name');
+  const [userProfilePhoto, setUserProfilePhoto] = useState(null);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [newName, setNewName] = useState(userName);
+  const [newProfilePhoto, setNewProfilePhoto] = useState(null);
+  
+
+  const user = auth.currentUser;
+  // Request permission for image picker
+  const requestPermissions = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Permission to access media library is required!');
+    }
+  };
+  useEffect(() => {
+    requestPermissions();
+  }, []);
+  // Fetch user data when the component mounts
+  useEffect(() => {
+    if (user) {
+      // Fetch user data from Firestore or AsyncStorage
+      // For example, using AsyncStorage or Firestore
+      AsyncStorage.getItem('userProfile').then((profileData) => {
+        if (profileData) {
+          const profile = JSON.parse(profileData);
+          setUserName(profile.name);
+          setUserProfilePhoto(profile.photoUrl);
+        }
+      });
+    }
+  }, [user]);
+  
+  const handleEditProfile = () => {
+    setNewName(userName); // Ensure the input field shows the current name
+    setIsEditingProfile(true); // Enable editing mode
+  };
+  
+
 
   const handleSearch = async () => {
     if (searchTerm.trim() === '') {
