@@ -54,9 +54,9 @@ const DetailsScreen = ({ route, navigation }) => {
   return (
     <FlatList
       data={[
-        { title: destination.name || 'No name available', isTitle: true },
+        { title: destination.name || 'No name available as mentioned', isTitle: true },
         { title: 'Description', isTitle: true },
-        { title: destination.description || 'No description available' },
+        { title: destination.description || 'No description available here' },
         { title: 'Best Time to Visit', isTitle: true },
         { title: destination.bestTime || 'No time specified' },
         { title: 'Category', isTitle: true },
@@ -68,7 +68,7 @@ const DetailsScreen = ({ route, navigation }) => {
         { title: 'Weather', isTitle: true },
         {
           title: weatherError
-            ? 'Unable to fetch weather data. Please try again later.'
+            ? 'Unable to fetch weather details. Please try again later.'
             : weather ? (
               <View>
                 <Text style={styles.text}>
@@ -96,7 +96,7 @@ const DetailsScreen = ({ route, navigation }) => {
                 <Image key={index} source={{ uri: img }} style={styles.carouselImage} />
               ))
             ) : (
-              <Text style={styles.text}>No images available</Text>
+              <Text style={styles.text}>No images are available</Text>
             )}
           </Swiper>
         </>
