@@ -313,9 +313,13 @@ const HomeScreen = ({ navigation }) => {
 
   {/* Search Container */}
   <View style={styles.searchContainer}>
+  <TouchableOpacity onPress={resetSearch} style={styles.searchIcon}>
+  <AntDesign name="reload1" size={18} color="#4CAF50" />
+  </TouchableOpacity>
     <TextInput
-      style={styles.inputContainer}
+      style={[styles.inputContainer, { color: '#000' }]}
       placeholder="Search for destinations"
+       placeholderTextColor="#888"
       value={searchTerm}
       onChangeText={setSearchTerm}
     />
@@ -324,29 +328,52 @@ const HomeScreen = ({ navigation }) => {
     </TouchableOpacity>
   </View>
 </View>
-      <Modal visible={isEditingProfile} animationType="slide" onRequestClose={() => setIsEditingProfile(false)}>
-  <View style={styles.modalContainer}>
-    <TextInput
-      style={styles.input}
-      placeholder="Enter your name"
-      value={newName}
-      onChangeText={setNewName} 
-    />
      
-    {/* Display the preview of the selected image */}
-    <View style={styles.profileImagePreviewContainer}>
-      <Image 
-        source={{ uri: newProfilePhoto || userProfilePhoto || 'https://placekitten.com/200/200' }} 
-        style={styles.profileImageModal}
-      />
-    </View>
-    <TouchableOpacity style={styles.uploadButton} onPress={handleImagePicker}>
-      <Text style={styles.uploadButtonText}>Change Profile Picture</Text>
-    </TouchableOpacity>
+<Modal 
+  visible={isEditingProfile} 
+  animationType="slide" 
+  transparent 
+  onRequestClose={() => setIsEditingProfile(false)}
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
 
-    {/* Save Button */}
-    <Button title="Save" onPress={handleSaveProfile} />
-    <Button title="Cancel" onPress={() => setIsEditingProfile(false)} />
+      {/* Profile Image with Edit Icon */}
+      <View style={styles.profileImagePreviewContainer}>
+        <Image 
+          source={{ uri: newProfilePhoto || userProfilePhoto || 'https://placekitten.com/200/200' }} 
+          style={styles.profileImageModal}
+        />
+        <TouchableOpacity style={styles.editIcon} onPress={handleImagePicker}>
+          <AntDesign name="camera" size={18} color="#fff" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Name Input */}
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your name"
+        value={newName}
+        onChangeText={setNewName} 
+      />
+
+      {/* Change Profile Picture */}
+      <TouchableOpacity style={styles.uploadButton} onPress={handleImagePicker}>
+        <Text style={styles.uploadButtonText}>Change Profile Picture</Text>
+      </TouchableOpacity>
+
+      {/* Save & Cancel Buttons */}
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile}>
+          <Text style={styles.buttonText}>Save</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.cancelButton} onPress={() => setIsEditingProfile(false)}>
+          <Text style={styles.buttonText}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
+      
+    </View>
   </View>
 </Modal>
 <View style={styles.line} />

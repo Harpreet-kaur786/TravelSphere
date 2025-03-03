@@ -43,24 +43,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1, 
-    borderColor: '#ccc', 
+    borderColor: '#ddd', 
     borderRadius: 8, 
-    paddingHorizontal: 5,
+    paddingHorizontal: 10,
     paddingVertical: 5,
     width: '60%', 
-    marginBottom:35,
-    borderWidth: 2,
+    marginBottom: 20,
+    backgroundColor: '#FFF',
   },
-  
   inputContainer: {
     flex: 1,
-    height: 20,
+    height: 40,  // Increased height for better visibility
     paddingHorizontal: 8,
-    color: '#000',
-    fontWeight: '800'
-
+    fontWeight: '800',
+    color: '#000',  // Ensure text color is applied
   },
-  
   searchIcon: {
     padding: 5,
   },
@@ -153,86 +150,105 @@ const styles = StyleSheet.create({
   },
 
 
-modalContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: '#f9f9f9',
-  padding: 20,
-},
-
-
-
-
-
-profileImageContainer: {
-  position: 'relative',
-  marginBottom: 15,
-},
-
-profileImageModal: {
-  width: 120,
-  height: 120,
-  borderRadius: 60,
-  borderWidth: 2,
-  borderColor: '#ccc',
-},
-
-editIcon: {
-  position: 'absolute',
-  bottom: 5,
-  right: 5,
-  backgroundColor: '#4CAF50',
-  borderRadius: 15,
-  padding: 6,
-},
-
-input: {
-  width: '100%',
-  borderWidth: 1,
-  borderColor: '#ccc',
-  borderRadius: 8,
-  padding: 10,
-  fontSize: 16,
-  marginBottom: 15,
-  textAlign: 'center',
-},
-
-buttonsContainer: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  width: '100%',
-  marginTop: 10,
-},
-
-saveButton: {
-  backgroundColor: '#2196F3',
-  paddingVertical: 12,
-  borderRadius: 8,
-  flex: 1,
-  marginRight: 10,
-  alignItems: 'center',
-},
-
-cancelButton: {
-  backgroundColor: '#f44336',
-  paddingVertical: 12,
-  borderRadius: 8,
-  flex: 1,
-  alignItems: 'center',
-},
-
-buttonText: {
-  color: '#fff',
-  fontSize: 16,
-  fontWeight: '500',
-},
-
-
-   profileImagePreviewContainer: {
-    marginBottom: 20,
+  modalContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Semi-transparent background for a modern look
+    padding: 20,
+  },
+  
+  modalContent: {
+    width: '90%',
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 20,
+    alignItems: 'center',
+    elevation: 5, // Adds shadow for Android
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  },
+  
+  profileImagePreviewContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  
+  profileImageModal: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 2,
+    borderColor: '#ddd',
+  },
+  
+  editIcon: {
+    position: 'absolute',
+    bottom: 0,
+    right: 5,
+    backgroundColor: '#4CAF50',
+    borderRadius: 20,
+    padding: 6,
+    elevation: 5,
+  },
+  
+  input: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    marginBottom: 15,
+    textAlign: 'center',
+    backgroundColor: '#f8f8f8',
+  },
+  
+  uploadButton: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    marginBottom: 15,
+    alignItems: 'center',
+  },
+  
+  uploadButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  
+  saveButton: {
+    backgroundColor: '#2196F3',
+    paddingVertical: 12,
+    borderRadius: 8,
+    flex: 1,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  
+  cancelButton: {
+    backgroundColor: '#f44336',
+    paddingVertical: 12,
+    borderRadius: 8,
+    flex: 1,
+    alignItems: 'center',
+  },
+  
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '500',
   },
 });
 
