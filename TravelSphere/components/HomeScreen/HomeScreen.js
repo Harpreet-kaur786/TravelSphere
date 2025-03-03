@@ -279,16 +279,36 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
      
-   <View style={styles.profileContainer}>
-   <Image
-     source={newProfilePhoto ? { uri: newProfilePhoto } : require('../../assets/favicon.png')}
+     <View style={styles.topContainer}>
+  {/* Profile Section */}
+  <View style={styles.profileSection}>
+    <Image
+      source={newProfilePhoto ? { uri: newProfilePhoto } : require('../../assets/character.jpg')}
       style={styles.profileImage}
-/>
-<Text style={styles.profileName}>{userName}</Text>
-        <TouchableOpacity onPress={handleEditProfile} style={styles.editButton}>
-          <AntDesign name="edit" size={24} color="blue" />
-        </TouchableOpacity>
-      </View>
+    />
+    <View style={styles.profileInfo}>
+      <Text style={styles.profileName} numberOfLines={1} ellipsizeMode="tail">
+        {userName}
+      </Text>
+      <TouchableOpacity onPress={handleEditProfile} style={styles.editButton}>
+        <AntDesign name="edit" size={20} color="blue" />
+      </TouchableOpacity>
+    </View>
+  </View>
+
+  {/* Search Container */}
+  <View style={styles.searchContainer}>
+    <TextInput
+      style={styles.inputContainer}
+      placeholder="Search for destinations"
+      value={searchTerm}
+      onChangeText={setSearchTerm}
+    />
+    <TouchableOpacity onPress={handleSearch} style={styles.searchIcon}>
+      <AntDesign name="search1" size={24} color="#4CAF50" />
+    </TouchableOpacity>
+  </View>
+</View>
       <Modal visible={isEditingProfile} animationType="slide" onRequestClose={() => setIsEditingProfile(false)}>
   <View style={styles.modalContainer}>
     <TextInput
@@ -314,24 +334,7 @@ const HomeScreen = ({ navigation }) => {
     <Button title="Cancel" onPress={() => setIsEditingProfile(false)} />
   </View>
 </Modal>
-
-      {/* Search bar */}
-      <View style={styles.searchContainer}>
-      <TouchableOpacity onPress={resetSearch} style={styles.searchIcon}>
-      <AntDesign name="reload1" size={18} color="#4CAF50" />
-    </TouchableOpacity>
-        <TextInput
-          style={styles.input}
-          placeholder="Search for destinations"
-          value={searchTerm}
-          onChangeText={setSearchTerm}
-        />
-        <TouchableOpacity onPress={handleSearch} style={styles.searchIcon}>
-          <AntDesign name="search1" size={24} color="#4CAF50" />
-        </TouchableOpacity>
-      
-      </View>
-
+<View style={styles.line} />
       {/* Filter section */}
       <View style={styles.filterContainer}>
         {/* Filter title and toggle button
