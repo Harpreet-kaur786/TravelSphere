@@ -52,7 +52,7 @@ const HomeScreen = ({ navigation }) => {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [newName, setNewName] = useState(userName);
   const [newProfilePhoto, setNewProfilePhoto] = useState(null);
-  
+  const [checklist, setChecklist] = useState([]);
 
   const user = auth.currentUser;
   // Request permission for image picker
@@ -153,6 +153,10 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate('Favourite')} style={{ marginRight: 15 }}>
             <AntDesign name="heart" size={24} color="red" />
           </TouchableOpacity>
+          {/* ✅ Checklist Icon */}
+          <TouchableOpacity onPress={() => navigation.navigate('Checklist')} style={{ marginRight: 15 }}>
+            <AntDesign name="checksquareo" size={24} color="#32CD32" />
+          </TouchableOpacity>
           </>
       ),
     });
@@ -167,6 +171,7 @@ const HomeScreen = ({ navigation }) => {
     }
   };
   useEffect(() => {
+    loadChecklist();
     loadFavourites();
   }, []);
   
@@ -291,6 +296,31 @@ const HomeScreen = ({ navigation }) => {
     setFilterVisible(false);
   };
 
+  //checklist
+  const loadChecklist = async () => {
+    try {
+      const storedChecklist = await AsyncStorage.getItem('checklist');
+      if (storedChecklist) {
+        setChecklist(JSON.parse(storedChecklist));
+      }
+    } catch (error) {
+      console.error('Error loading checklist:', error);
+    }
+  };
+
+  const toggleChecklist = async (item) => {
+    let updatedChecklist = [...checklist];
+    const index = updatedChecklist.findIndex(chk => chk.name === item.name);
+
+    if (index === -1) {
+      updatedChecklist.push(item);
+    } else {
+      updatedChecklist.splice(index, 1);
+    }
+
+    setChecklist(updatedChecklist);
+    await AsyncStorage.setItem('checklist', JSON.stringify(updatedChecklist));
+  };
   return (
     <View style={styles.container}>
      
@@ -498,13 +528,21 @@ const HomeScreen = ({ navigation }) => {
               <View style={styles.cardContent}>
                 <Text style={styles.title}>{item.name}</Text>
                 <Text style={styles.description}>{item.description}</Text>
-                <TouchableOpacity 
-                  style={styles.detailsLink} 
-                  onPress={() => navigation.navigate('Details', { item })}
-                >
-                  <AntDesign name="plus" size={16} color="#4CAF50" />
-                  <Text style={styles.detailsText}> View Details</Text>
-                </TouchableOpacity>
+                <View style={styles.actionRow}>
+                  {/* ✅ Add to Checklist Button */}
+                  <TouchableOpacity onPress={() => toggleChecklist(item)} style={styles.actionButton}>
+                  <AntDesign 
+  name={Array.isArray(checklist) && checklist.some(chk => chk.name === item.name) ? 'checksquare' : 'checksquareo'} 
+  size={20} 
+  color="#32CD32" 
+/>
+                  </TouchableOpacity>
+                  {/* View Details */}
+                  <TouchableOpacity onPress={() => navigation.navigate('Details', { item })} style={styles.detailsLink}>
+                    <AntDesign name="plus" size={16} color="#4CAF50" />
+                    <Text style={styles.detailsText}> View Details</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           )}
