@@ -142,6 +142,21 @@ const HomeScreen = ({ navigation }) => {
     setUserProfilePhoto(photoUrl); // Update the photo immediately in the state
   };
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <>
+        <TouchableOpacity onPress={handleLogout} style={{ marginRight: 15 }}>
+          <AntDesign name="logout" size={24} color="red" />
+        </TouchableOpacity>
+        {/* Favourite Button */}
+        <TouchableOpacity onPress={() => navigation.navigate('Favourite')} style={{ marginRight: 15 }}>
+            <AntDesign name="heart" size={24} color="red" />
+          </TouchableOpacity>
+          </>
+      ),
+    });
+  }, [navigation]);
    
   const handleLogout = async () => {
     try {
