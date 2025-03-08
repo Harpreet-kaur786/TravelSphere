@@ -91,8 +91,8 @@ const DetailsScreen = ({ route, navigation }) => {
         <>
           <Text style={styles.title}>{destination.name}</Text>
           <Swiper style={styles.carousel} showsButtons autoplay>
-            {destination.image && Array.isArray(destination.image) ? (
-              destination.image.map((img, index) => (
+            {destination.images && Array.isArray(destination.images) ? (
+              destination.images.map((img, index) => (
                 <Image key={index} source={{ uri: img }} style={styles.carouselImage} />
               ))
             ) : (
