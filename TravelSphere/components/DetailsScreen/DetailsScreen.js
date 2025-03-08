@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator ,TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import Swiper from 'react-native-swiper';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 
 const DetailsScreen = ({ route, navigation }) => {
-  const { item: destination } = route.params || {}; // Extracting destination directly
+  const { item: destination } = route.params || {};
 
   if (!destination) {
     console.error("No destination data provided!");
-    navigation.goBack(); // Navigate back if no data is provided
+    navigation.goBack();
     return null;
   }
 
@@ -21,7 +20,7 @@ const DetailsScreen = ({ route, navigation }) => {
     if (destination['co-ordinates']) {
       const fetchWeather = async () => {
         try {
-          const apiKey = 'bbe8b53d8588c431ef2583584e243046'; // Ensure this is valid
+          const apiKey = 'bbe8b53d8588c431ef2583584e243046';
           const response = await axios.get(
             `https://api.openweathermap.org/data/2.5/weather?lat=${destination['co-ordinates'].latitude}&lon=${destination['co-ordinates'].longitude}&appid=${apiKey}&units=metric`
           );
@@ -54,9 +53,9 @@ const DetailsScreen = ({ route, navigation }) => {
   return (
     <FlatList
       data={[
-        { title: destination.name || 'No name available as mentioned', isTitle: true },
+        { title: destination.name || 'No name available', isTitle: true },
         { title: 'Description', isTitle: true },
-        { title: destination.description || 'No description available here' },
+        { title: destination.description || 'No description available' },
         { title: 'Best Time to Visit', isTitle: true },
         { title: destination.bestTime || 'No time specified' },
         { title: 'Category', isTitle: true },
@@ -68,14 +67,14 @@ const DetailsScreen = ({ route, navigation }) => {
         { title: 'Weather', isTitle: true },
         {
           title: weatherError
-            ? 'Unable to fetch weather details. Please try again later.'
+            ? 'Unable to fetch weather data. Please try again later.'
             : weather ? (
-              <View>
-                <Text style={styles.text}>
-                  {weather.weather[0].description}, {weather.main.temp}°C
+              <View style={styles.weatherContainer}>
+                <Text style={styles.weatherText}>
+                  {weather.weather[0].description.toUpperCase()}, {weather.main.temp}°C
                 </Text>
-                <Text style={styles.text}>
-                  Wind: {weather.wind.speed} m/s | Humidity: {weather.main.humidity}%
+                <Text style={styles.weatherText}>
+                  🌬 Wind: {weather.wind.speed} m/s | 💧 Humidity: {weather.main.humidity}%
                 </Text>
               </View>
             ) : (
@@ -96,7 +95,7 @@ const DetailsScreen = ({ route, navigation }) => {
                 <Image key={index} source={{ uri: img }} style={styles.carouselImage} />
               ))
             ) : (
-              <Text style={styles.text}>No images are available</Text>
+              <Text style={styles.text}>No images available</Text>
             )}
           </Swiper>
         </>
@@ -126,7 +125,7 @@ const styles = StyleSheet.create({
     color: '#2f4f4f',
   },
   text: {
-    fontSize: 17,
+    fontSize: 16,
     color: '#555',
     marginBottom: 10,
   },
@@ -138,6 +137,18 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 250,
     borderRadius: 15,
+  },
+  weatherContainer: {
+    backgroundColor: '#D6EAF8', // Light blue background
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 10,
+    alignItems: 'center',
+  },
+  weatherText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#154360', // Dark blue text for readability
   },
 });
 
