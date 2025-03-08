@@ -20,13 +20,14 @@ import {
 
 // Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCuek23DPFdQmInmk4QFGdDlR_ITGS2iuA",
-  authDomain: "todoapp-11598.firebaseapp.com",
-  projectId: "todoapp-11598",
-  storageBucket: "todoapp-11598.appspot.com",
-  messagingSenderId: "732959130893",
-  appId: "1:732959130893:web:145deb10fa95697e1b9c44",
+  apiKey: "AIzaSyA56tuwcbLsDcYYSaXPUrR_FJTlayC_maE",
+  authDomain: "travelsphere-64705.firebaseapp.com",
+  projectId: "travelsphere-64705",
+  storageBucket: "travelsphere-64705.firebasestorage.app",
+  messagingSenderId: "610542033934",
+  appId: "1:610542033934:web:64da592e3f005260c7705f"
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
