@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextInput, View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
-import { firestore, collection, getDocs, query } from '../../firebase';
+import { firestore, collection, getDocs, query, where } from '../../firebase';
 import { AntDesign } from '@expo/vector-icons';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
@@ -11,7 +11,7 @@ import {Modal} from 'react-native';
 import {Button} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage"
-
+import { ScrollView } from 'react-native-gesture-handler';
 const storage = getStorage();
 const levenshtein = (a, b) => {
   const tmp = [];
