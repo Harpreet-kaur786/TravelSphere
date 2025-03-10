@@ -250,6 +250,61 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
   },
+
+  TravelSection:{
+    fontSize: 20, fontWeight: "bold", marginLeft: 20, marginBottom: 10
+  },
+  categoryContainer: {
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+  categoryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    marginRight: 20,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
+  },
+  categoryImage: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+  },
+  categoryText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  regionTabs: {
+    flexDirection: 'row',
+    paddingVertical: 10, 
+    paddingHorizontal: 5, 
+  },
+  
+  regionButton: {
+    backgroundColor: '#4CAF50', 
+    paddingVertical: 10, 
+    paddingHorizontal: 15, 
+    borderRadius: 10, // Reduce border radius for a more box-like appearance
+    marginRight: 10, 
+    width: 100,  // Set a fixed width to make it more box-like
+    height: 50,  // Reduce height
+    justifyContent: 'center', // Center text vertically
+    alignItems: 'center', // Center text horizontally
+  },
+  
+  
+  regionText: {
+    color: 'white',
+    fontSize: 14, 
+    fontWeight: 'bold',
+  },
+  
+  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginVertical: 10 },
+  destinationCard: { width: 150, backgroundColor: '#fff', borderRadius: 10, marginRight: 10, padding: 10 },
+  destinationImage: { width: '100%', height: 100, borderRadius: 10 },
+  destinationName: { fontSize: 16, fontWeight: 'bold', marginVertical: 5 },
+  rating: { fontSize: 14, color: 'gold' }
 });
 
 

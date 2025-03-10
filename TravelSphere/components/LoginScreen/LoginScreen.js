@@ -1,9 +1,15 @@
+
+
+
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import { loginUser } from "../../firebase"; // Import login function
-import { auth } from "../../firebase"; // Firebase Auth instance
+import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { loginUser } from "../../firebase"; 
+import { auth } from "../../firebase"; 
 import { sendEmailVerification } from "firebase/auth";
-import styles from'./styles'
+import styles from './styles';
+
+
 const LoginScreen = ({ navigation }) => {
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -21,7 +27,6 @@ const LoginScreen = ({ navigation }) => {
 
     if (result.success) {
       const user = auth.currentUser;
-
       if (user && !user.emailVerified) {
         setIsLoading(false);
         Alert.alert(
@@ -34,8 +39,7 @@ const LoginScreen = ({ navigation }) => {
         );
         return;
       }
-
-      navigation.replace("Home"); // Navigate to Home after login
+      navigation.replace("Home");
     } else {
       setErrorMessage(result.message);
       setIsLoading(false);
@@ -44,35 +48,62 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+      {/* Top Image */}
+      <View style={styles.imageContainer}>
+        <Image source={require("../../assets/EfilTower.jpg")} style={styles.image} />
+      </View>
 
-      <TextInput
-        placeholder="Email"
-        value={emailOrUsername}
-        onChangeText={setEmailOrUsername}
-        style={styles.input}
-        autoCapitalize="none"
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
+      {/* Login Form */}
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Login</Text>
+        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
-      <TouchableOpacity onPress={handleLogin} style={styles.button} disabled={isLoading}>
-        <Text style={styles.buttonText}>{isLoading ? "Logging in..." : "Login"}</Text>
-      </TouchableOpacity>
+        {/* Email Input */}
+        <View style={styles.inputContainer}>
+          <FontAwesome name="user" size={20} style={styles.icon} />
+          <TextInput
+            placeholder="Email"
+            value={emailOrUsername}
+            onChangeText={setEmailOrUsername}
+            style={styles.input}
+            autoCapitalize="none"
+          />
+        </View>
 
-      <Text>Don’t have an account?</Text>
-      <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-        <Text style={styles.linkText}>Sign Up</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backText}>← Back</Text>
-      </TouchableOpacity>
+        {/* Password Input */}
+        <View style={styles.inputContainer}>
+          <FontAwesome name="lock" size={20} style={styles.icon} />
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={styles.input}
+          />
+        </View>
+
+        {/* Login Button */}
+        <TouchableOpacity onPress={handleLogin} style={styles.button} disabled={isLoading}>
+          <Text style={styles.buttonText}>{isLoading ? "Logging in..." : "Login"}</Text>
+        </TouchableOpacity>
+
+        {/* Signup & Back Navigation */}
+        <View style={styles.signupText}>
+          <Text>Don’t have an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+            <Text style={styles.signupLink}> Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={styles.signupLink}>← Back</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Bottom Image */}
+      <View style={styles.imageContainerBottom}>
+        <Image source={require("../../assets/LoginBottom.jpg")} style={styles.imageBottom} />
+      </View>
     </View>
   );
 };

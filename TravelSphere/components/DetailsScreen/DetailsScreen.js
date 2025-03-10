@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
 import Swiper from 'react-native-swiper';
 import axios from 'axios';
-
+import { firestore } from '../../firebase'; // Import your firestore configuration
+import { collection, query, where, getDocs } from 'firebase/firestore';
 const DetailsScreen = ({ route, navigation }) => {
   const { item: destination } = route.params || {};
 
@@ -15,10 +16,12 @@ const DetailsScreen = ({ route, navigation }) => {
   const [weather, setWeather] = useState(null);
   const [weatherError, setWeatherError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [popularDestinations, setPopularDestinations] = useState([]);
 
+  // Fetch weather data based on destination coordinates
   useEffect(() => {
-    if (destination['co-ordinates']) {
-      const fetchWeather = async () => {
+    const fetchWeather = async () => {
+      if (destination['co-ordinates']) {
         try {
           const apiKey = 'bbe8b53d8588c431ef2583584e243046';
           const response = await axios.get(
@@ -37,11 +40,30 @@ const DetailsScreen = ({ route, navigation }) => {
         } finally {
           setLoading(false);
         }
-      };
+      }
+    };
 
-      fetchWeather();
-    }
+    fetchWeather(); // Fetch weather data when the component mounts
   }, [destination]);
+
+  useEffect(() => {
+    const fetchPopularDestinations = async () => {
+      try {
+        const q = query(collection(firestore, "destinations"), where("isPopular", "==", true));
+        const querySnapshot = await getDocs(q);
+        const fetchedData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        
+        setPopularDestinations(fetchedData); // Update state with the fetched data
+      } catch (error) {
+        console.error("Error fetching popular destinations: ", error);
+      }
+    };
+  
+    fetchPopularDestinations();
+  }, []);
 
   const renderItem = ({ item }) => {
     if (item.isTitle) {

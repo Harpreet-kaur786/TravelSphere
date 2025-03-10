@@ -55,6 +55,39 @@ const HomeScreen = ({ navigation }) => {
   const [checklist, setChecklist] = useState([]);
   const [favourites, setFavourites] = useState([]); // ✅ Add this line
 
+  const categories = ['Beach', 'Mountain', 'Waterfall'];
+  //Popular
+  const [popularDestinations, setPopularDestinations] = useState([]);
+  useEffect(() => {
+    const fetchPopularDestinations = async () => {
+      try {
+        const q = query(collection(firestore, "destinations"), where("isPopular", "==", true));
+        const querySnapshot = await getDocs(q);
+        const fetchedData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        
+        setPopularDestinations(fetchedData); // Update state with the fetched data
+      } catch (error) {
+        console.error("Error fetching popular destinations: ", error);
+      }
+    };
+  
+    fetchPopularDestinations();
+  }, []);
+
+  const popularImages = {
+    "Banff National Park": require("../../assets/Banff.jpg"),
+    "CN Tower": require("../../assets/CNtower.jpg"),
+    "Golden Temple": require("../../assets/GoldenTemple.jpg"),
+   "Mount Fuji": require("../../assets/MountFuji.jpg"),
+    "Niagara Falls": require("../../assets/NiagraFalls.jpg"),
+    Paris: require("../../assets/Paris.jpg"),
+    "Taj Mahal": require("../../assets/TajMahal.jpg"),
+  };
+  
+
   const user = auth.currentUser;
   // Request permission for image picker
   const requestPermissions = async () => {
@@ -316,48 +349,6 @@ const HomeScreen = ({ navigation }) => {
       console.error('Error loading checklist:', error);
     }
   };
-
-  // const toggleChecklist = async (item) => {
-  //   try {
-  //     let updatedChecklist = [...checklist];
-  //     const index = updatedChecklist.findIndex(chk => chk.name === item.name);
-  
-  //     if (index === -1) {
-  //       updatedChecklist.push(item); // Add destination to checklist
-  //     } else {
-  //       updatedChecklist.splice(index, 1); // Remove if already added
-  //     }
-  
-  //     setChecklist(updatedChecklist);
-  //     await AsyncStorage.setItem('checklist', JSON.stringify(updatedChecklist));
-  //   } catch (error) {
-  //     console.error('Error updating checklist:', error);
-  //   }
-  // };
-
-  // const toggleChecklist = async (item) => {
-  //   try {
-  //     let storedChecklist = await AsyncStorage.getItem('checklist');
-  //     let checklistArray = storedChecklist ? JSON.parse(storedChecklist) : []; // ✅ Ensure checklist is an array
-  
-  //     if (!Array.isArray(checklistArray)) {
-  //       checklistArray = []; // ✅ Fix if it's not an array
-  //     }
-  
-  //     const index = checklistArray.findIndex(chk => chk.name === item.name);
-  
-  //     if (index === -1) {
-  //       checklistArray.push(item);
-  //     } else {
-  //       checklistArray.splice(index, 1);
-  //     }
-  
-  //     setChecklist(checklistArray);
-  //     await AsyncStorage.setItem('checklist', JSON.stringify(checklistArray));
-  //   } catch (error) {
-  //     console.error('Error updating checklist:', error);
-  //   }
-  // };
   const toggleChecklist = async (item) => {
     try {
       let storedChecklist = await AsyncStorage.getItem('checklist');
@@ -631,6 +622,68 @@ const HomeScreen = ({ navigation }) => {
       ) : (
         <Text>No destinations found</Text>
       )}
+
+
+
+<View style={styles.categoryContainer}>
+      {categories.map((category, index) => (
+        <TouchableOpacity key={index} style={styles.categoryButton}>
+          {/* Display an image based on the category */}
+          <Image
+            source={
+              category === 'Beach' 
+                ? require('../../assets/Signup.jpg') 
+                : category === 'Mountain' 
+                ? require('../../assets/Banff.jpg') 
+                : category === 'Waterfall' 
+                ? require('../../assets/NiagraFalls.jpg') 
+                : null
+            }
+            style={styles.categoryImage}
+          />
+          <Text style={styles.categoryText}>{category}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+      <Text style={styles.sectionTitle}>Places to Travel</Text>
+      <ScrollView 
+  horizontal 
+  showsHorizontalScrollIndicator={false} 
+  contentContainerStyle={styles.regionTabsContainer}
+>
+  {['USA', 'Europe', 'Asia', 'Australia', 'India'].map((region, index) => (
+    <TouchableOpacity key={index} style={styles.regionButton}>
+      <Text style={styles.regionText}>{region}</Text>
+    </TouchableOpacity>
+  ))}
+</ScrollView>
+<Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>Popular</Text>
+<FlatList
+      data={popularDestinations}
+      horizontal
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => (
+        <TouchableOpacity 
+          style={{ marginRight: 10 }} 
+          onPress={() => {
+            // Navigate to DetailsScreen and pass destination item
+            navigation.navigate('Details', {
+              item: item, // Pass the entire item (destination) to the DetailsScreen
+            });
+          }}
+        >
+          {popularImages[item.name] ? (
+            <Image
+              source={popularImages[item.name]}
+              style={{ width: 100, height: 100, borderRadius: 10 }}
+            />
+          ) : (
+            <Text>No Image</Text> // Fallback if no image is found
+          )}
+          <Text>{item.name}</Text>
+        </TouchableOpacity>
+      )}
+    />
     </View>
   );
 };

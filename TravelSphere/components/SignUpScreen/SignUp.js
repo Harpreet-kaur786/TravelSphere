@@ -1,8 +1,11 @@
+
+
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
 import { auth } from "../../firebase";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import styles from './styles'
+import styles from './styles';
+
 const SignUpScreen = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -38,8 +41,7 @@ const SignUpScreen = ({ navigation }) => {
       setLastNameError("");
     }
 
-
-    //  Email Validation
+    // Email Validation
     if (!email) {
       setEmailError("Email is required.");
       isValid = false;
@@ -70,7 +72,7 @@ const SignUpScreen = ({ navigation }) => {
       setPasswordError("");
     }
 
-    //  Confirm Password Validation
+    // Confirm Password Validation
     if (password !== confirmPassword) {
       setConfirmPasswordError("Passwords do not match.");
       isValid = false;
@@ -109,61 +111,64 @@ const SignUpScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
+    <ImageBackground source={require("../../assets/Signup.jpg")} style={styles.container}>
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Sign Up</Text>
 
-<TextInput
-  placeholder="First Name"
-  value={firstName}
-  onChangeText={setFirstName}
-  style={styles.input}
-/>
-{firstNameError ? <Text style={styles.errorText}>{firstNameError}</Text> : null}
+        <TextInput
+          placeholder="First Name"
+          value={firstName}
+          onChangeText={setFirstName}
+          style={styles.input}
+        />
+        {firstNameError ? <Text style={styles.errorText}>{firstNameError}</Text> : null}
 
-<TextInput
-  placeholder="Last Name"
-  value={lastName}
-  onChangeText={setLastName}
-  style={styles.input}
-/>
-{lastNameError ? <Text style={styles.errorText}>{lastNameError}</Text> : null}
+        <TextInput
+          placeholder="Last Name"
+          value={lastName}
+          onChangeText={setLastName}
+          style={styles.input}
+        />
+        {lastNameError ? <Text style={styles.errorText}>{lastNameError}</Text> : null}
 
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-        keyboardType="email-address"
-      />
-      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+          keyboardType="email-address"
+        />
+        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
-      {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          style={styles.input}
+        />
+        {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
-      <TextInput
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-        style={styles.input}
-      />
-      {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
+        <TextInput
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+          style={styles.input}
+        />
+        {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
 
-      {verificationMessage ? <Text style={styles.verificationText}>{verificationMessage}</Text> : null}
+        {verificationMessage ? <Text style={styles.verificationText}>{verificationMessage}</Text> : null}
 
-      <TouchableOpacity onPress={handleSignUp} style={styles.button} disabled={isLoading}>
-        <Text style={styles.buttonText}>{isLoading ? "Signing Up..." : "Sign Up"}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backText}>← Back</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={handleSignUp} style={styles.button} disabled={isLoading}>
+          <Text style={styles.buttonText}>{isLoading ? "Signing Up..." : "Sign Up"}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Text style={styles.backText}>← Back</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
