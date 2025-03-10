@@ -52,8 +52,8 @@ const HomeScreen = ({ navigation }) => {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [newName, setNewName] = useState(userName);
   const [newProfilePhoto, setNewProfilePhoto] = useState(null);
-  const [favourites, setFavourites] = useState([]); // ✅ FIX: Define `setFavourites` state
   const [checklist, setChecklist] = useState([]);
+  const [favourites, setFavourites] = useState([]); // ✅ Add this line
 
   const user = auth.currentUser;
   // Request permission for image picker
@@ -135,7 +135,6 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-
   const saveUserProfile = async (name, photoUrl) => {
     const profileData = { name, photoUrl };
     await AsyncStorage.setItem('userProfile', JSON.stringify(profileData));
@@ -176,34 +175,40 @@ const HomeScreen = ({ navigation }) => {
     loadFavourites();
   }, []);
   
-   const loadFavourites = async () => {
+  const loadFavourites = async () => {
     try {
       const favs = await AsyncStorage.getItem('favourites');
       if (favs) {
-        setFavourites(JSON.parse(favs)); // ✅ FIX: `setFavourites` now exists
-      } else {
-        setFavourites([]);
+        setFavourites(JSON.parse(favs)); // ✅ Ensure JSON data is parsed properly
       }
     } catch (error) {
       console.error('Error loading favourites:', error);
-      setFavourites([]);
     }
-  };
-  
-  const toggleFavourite = async (item) => {
-    let updatedFavourites = [...favourites];
-    const index = updatedFavourites.findIndex(fav => fav.name === item.name);
-    
-    if (index === -1) {
-      updatedFavourites.push(item); // Add if not in favourites
-    } else {
-      updatedFavourites.splice(index, 1); // Remove if already in favourites
-    }
-  
-    setFavourites(updatedFavourites);
-    await AsyncStorage.setItem('favourites', JSON.stringify(updatedFavourites));
   };
 
+  const toggleFavourite = async (item) => {
+    try {
+      let storedFavourites = await AsyncStorage.getItem('favourites');
+      let favouritesArray = storedFavourites ? JSON.parse(storedFavourites) : [];
+  
+      if (!Array.isArray(favouritesArray)) favouritesArray = [];
+  
+      let updatedFavourites;
+  
+      // ✅ Add if not exists, remove if exists
+      if (favouritesArray.some(fav => fav.name === item.name)) {
+        updatedFavourites = favouritesArray.filter(fav => fav.name !== item.name);
+      } else {
+        updatedFavourites = [...favouritesArray, item];
+      }
+  
+      setFavourites(updatedFavourites);
+      await AsyncStorage.setItem('favourites', JSON.stringify(updatedFavourites));
+  
+    } catch (error) {
+      console.error('Error updating favourites:', error);
+    }
+  };
   const handleSearch = async () => {
     if (searchTerm.trim() === '') {
       return;
@@ -303,61 +308,77 @@ const HomeScreen = ({ navigation }) => {
   //checklist
   const loadChecklist = async () => {
     try {
-        const storedChecklist = await AsyncStorage.getItem('checklist');
-        if (storedChecklist) {
-            setChecklist(JSON.parse(storedChecklist));  // ✅ Ensure it’s set correctly
-        } else {
-            setChecklist([]);  // ✅ Default to empty array
-        }
-    } catch (error) {
-        console.error('Error loading checklist:', error);
-        setChecklist([]);
-    }
-};
-
-// ✅ Load checklist when component mounts
-useEffect(() => {
-    loadChecklist();
-}, []);
-
-// ✅ Load checklist on component mount
-useEffect(() => {
-    loadChecklist();
-}, []);
-
-const toggleChecklist = async (item) => {
-  try {
-      let updatedChecklist = Array.isArray(checklist) ? [...checklist] : [];
-
-      const index = updatedChecklist.findIndex(chk => chk.name === item.name);
-      if (index === -1) {
-          updatedChecklist.push({ ...item, items: [] }); // ✅ Ensure `items` field is initialized
-      } else {
-          updatedChecklist.splice(index, 1);
+      const storedChecklist = await AsyncStorage.getItem('checklist');
+      if (storedChecklist) {
+        setChecklist(JSON.parse(storedChecklist));
       }
+    } catch (error) {
+      console.error('Error loading checklist:', error);
+    }
+  };
 
+  // const toggleChecklist = async (item) => {
+  //   try {
+  //     let updatedChecklist = [...checklist];
+  //     const index = updatedChecklist.findIndex(chk => chk.name === item.name);
+  
+  //     if (index === -1) {
+  //       updatedChecklist.push(item); // Add destination to checklist
+  //     } else {
+  //       updatedChecklist.splice(index, 1); // Remove if already added
+  //     }
+  
+  //     setChecklist(updatedChecklist);
+  //     await AsyncStorage.setItem('checklist', JSON.stringify(updatedChecklist));
+  //   } catch (error) {
+  //     console.error('Error updating checklist:', error);
+  //   }
+  // };
+
+  // const toggleChecklist = async (item) => {
+  //   try {
+  //     let storedChecklist = await AsyncStorage.getItem('checklist');
+  //     let checklistArray = storedChecklist ? JSON.parse(storedChecklist) : []; // ✅ Ensure checklist is an array
+  
+  //     if (!Array.isArray(checklistArray)) {
+  //       checklistArray = []; // ✅ Fix if it's not an array
+  //     }
+  
+  //     const index = checklistArray.findIndex(chk => chk.name === item.name);
+  
+  //     if (index === -1) {
+  //       checklistArray.push(item);
+  //     } else {
+  //       checklistArray.splice(index, 1);
+  //     }
+  
+  //     setChecklist(checklistArray);
+  //     await AsyncStorage.setItem('checklist', JSON.stringify(checklistArray));
+  //   } catch (error) {
+  //     console.error('Error updating checklist:', error);
+  //   }
+  // };
+  const toggleChecklist = async (item) => {
+    try {
+      let storedChecklist = await AsyncStorage.getItem('checklist');
+      let checklistArray = storedChecklist ? JSON.parse(storedChecklist) : [];
+  
+      if (!Array.isArray(checklistArray)) checklistArray = [];
+  
+      let updatedChecklist;
+      if (checklistArray.some(chk => chk.name === item.name)) {
+        updatedChecklist = checklistArray.filter(chk => chk.name !== item.name);
+      } else {
+        updatedChecklist = [...checklistArray, item];
+      }
+  
       setChecklist(updatedChecklist);
       await AsyncStorage.setItem('checklist', JSON.stringify(updatedChecklist));
-
-      // ✅ Navigate to Checklist screen after adding
-      navigation.navigate('Checklist');
-
-  } catch (error) {
+    } catch (error) {
       console.error('Error updating checklist:', error);
-  }
-};
-
-<TouchableOpacity 
-  onPress={() => toggleChecklist(item)} 
-  style={styles.actionButton}
->
-  <AntDesign 
-    name={Array.isArray(checklist) && checklist.some(chk => chk.name === item.name) ? 'checksquare' : 'checksquareo'} 
-    size={20} 
-    color="#32CD32" 
-  />
-</TouchableOpacity>
-
+    }
+  };
+  
   return (
     <View style={styles.container}>
      
@@ -381,11 +402,7 @@ const toggleChecklist = async (item) => {
   {/* Search Container */}
   <View style={styles.searchContainer}>
   <TouchableOpacity onPress={resetSearch} style={styles.searchIcon}>
-  <AntDesign 
-  name={Array.isArray(checklist) && checklist.some(chk => chk.name === item.name) ? 'checksquare' : 'checksquareo'} 
-  size={20} 
-  color="#32CD32" 
-/>
+  <AntDesign name="reload1" size={18} color="#4CAF50" />
   </TouchableOpacity>
     <TextInput
       style={[styles.inputContainer, { color: '#000' }]}
@@ -570,19 +587,42 @@ const toggleChecklist = async (item) => {
                 <Text style={styles.title}>{item.name}</Text>
                 <Text style={styles.description}>{item.description}</Text>
                 <View style={styles.actionRow}>
-                  {/* ✅ Add to Checklist Button */}
-                  <TouchableOpacity onPress={() => toggleChecklist(item)} style={styles.actionButton}>
-                  <AntDesign 
-  name={Array.isArray(checklist) && checklist.some(chk => chk.name === item.name) ? 'checksquare' : 'checksquareo'} 
-  size={20} 
-  color="#32CD32" 
-/>
-                  </TouchableOpacity>
+
+                  {/* ✅ Checklist Toggle Button */}
+          <TouchableOpacity onPress={() => toggleChecklist(item)} style={styles.actionButton}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <AntDesign
+              name={checklist.some(chk => chk.name === item.name) ? 'checksquare' : 'checksquareo'}
+              size={20}
+              color="#32CD32"
+            />
+            <Text style={{ marginLeft: 5, color: '#32CD32', fontWeight: 'bold' }}>Make Checklist</Text>
+          </View>
+          </TouchableOpacity>
+
+                  {/* ✅ Favourite Button (Heart Icon) */}
+          <TouchableOpacity onPress={() => toggleFavourite(item, checklist)} style={styles.actionButton}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <AntDesign
+              name={favourites.some(fav => fav.name === item.name) ? 'heart' : 'hearto'}
+              size={20}
+              color="red"
+            />
+            <Text style={{ marginLeft: 5, color: 'red', fontWeight: 'bold' }}>Add to Favourites</Text>
+          </View>
+          </TouchableOpacity>
+          
+          {/* ✅ View Details Button */}
+          <TouchableOpacity onPress={() => navigation.navigate('Details', { item })} style={styles.detailsLink}>
+            <AntDesign name="plus" size={16} color="#4CAF50" />
+            <Text style={styles.detailsText}> View Details</Text>
+          </TouchableOpacity>
+
                   {/* View Details */}
-                  <TouchableOpacity onPress={() => navigation.navigate('Details', { item })} style={styles.detailsLink}>
+                  {/* <TouchableOpacity onPress={() => navigation.navigate('Details', { item })} style={styles.detailsLink}>
                     <AntDesign name="plus" size={16} color="#4CAF50" />
                     <Text style={styles.detailsText}> View Details</Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               </View>
             </View>
