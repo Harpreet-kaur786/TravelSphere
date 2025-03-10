@@ -1,34 +1,43 @@
-import React from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { Video } from "expo-av";
+import { useNavigation } from "@react-navigation/native";
 import styles from "./styles";
 
-const GetStartedScreen = ({ navigation }) => {
+const GetStartedScreen = () => {
+  const navigation = useNavigation();
+
+  // Hide header if needed
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
-      {/* Image occupies 40% of the screen height */}
-      <Image
-        source={require('../../assets/pexels-nubikini-386009.jpg')} // Update with the correct path
-        style={styles.image}
+      {/* Video Background */}
+      <Video
+        source={require("../../assets/Started.mp4")}
+        style={styles.video}
         resizeMode="cover"
+        shouldPlay
+        isLooping
+        isMuted
       />
 
-      {/* Bottom 60%: Welcome Text and Buttons */}
-      <View style={styles.welcomeContainer}>
-        <Text style={styles.title}>Welcome to TravelSphere</Text>
-        <Text style={styles.subtitle}>Start your adventure today</Text>
+      {/* Overlay Content */}
+      <View style={styles.overlay}>
+        <Text style={styles.title}>EXPLORE</Text>
+        <Text style={styles.subtitle}>UNSEEN EARTH</Text>
+        <Text style={styles.description}>
+          TravelvSphere is a web-based collaborative travel guide based on the
+          wiki format and book hotels by users.
+        </Text>
 
-        <TouchableOpacity 
-          style={styles.button} 
+        <TouchableOpacity
+          style={styles.button}
           onPress={() => navigation.navigate("Login")}
         >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity 
-          onPress={() => navigation.navigate("SignUp")} 
-          style={styles.linkButton}
-        >
-          <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
+          <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
       </View>
     </View>

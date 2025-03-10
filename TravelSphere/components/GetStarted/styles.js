@@ -1,50 +1,53 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
+  container: {
+    flex: 1,
+    position: "relative",
   },
-  image: { 
-    height: "40%", 
-    width: "100%", 
+  video: {
+    ...StyleSheet.absoluteFillObject, 
   },
-  welcomeContainer: { 
-    flex: 1, 
-    justifyContent: "center", 
-    alignItems: "center", 
-    backgroundColor: "#f0f8ff", 
+  overlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    paddingBottom: 50,
     paddingHorizontal: 20,
-    paddingBottom: 40,
+    backgroundColor: "rgba(0, 0, 0, 0.3)", 
   },
-  title: { 
-    fontSize: 28, 
-    fontWeight: "bold", 
-    color: "#007BFF", 
-    marginBottom: 10 
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "white",
+    textTransform: "uppercase",
+    letterSpacing: 2,
   },
-  subtitle: { 
-    fontSize: 18, 
-    color: "#333", 
-    marginBottom: 30 
+  subtitle: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "white",
+    textTransform: "uppercase",
+    marginBottom: 10,
   },
-  button: { 
-    backgroundColor: "#007BFF", 
-    padding: 15, 
-    borderRadius: 8, 
-    width: "100%",
-    alignItems: "center"
+  description: {
+    fontSize: 14,
+    color: "white",
+    textAlign: "center",
+    marginBottom: 20,
+    paddingHorizontal: 10,
   },
-  buttonText: { 
-    color: "white", 
-    fontSize: 18 
+  button: {
+    backgroundColor: "#3DB2FF",
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    alignItems: "center",
   },
-  linkButton: {
-    marginTop: 20,
-    alignItems: "center"
-  },
-  linkText: { 
-    color: "#007BFF", 
-    fontSize: 16
+  buttonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 
