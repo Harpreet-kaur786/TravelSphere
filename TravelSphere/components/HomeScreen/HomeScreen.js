@@ -52,6 +52,7 @@ const HomeScreen = ({ navigation }) => {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [newName, setNewName] = useState(userName);
   const [newProfilePhoto, setNewProfilePhoto] = useState(null);
+  const [favourites, setFavourites] = useState([]); // ✅ FIX: Define `setFavourites` state
   const [checklist, setChecklist] = useState([]);
 
   const user = auth.currentUser;
@@ -175,14 +176,17 @@ const HomeScreen = ({ navigation }) => {
     loadFavourites();
   }, []);
   
-  const loadFavourites = async () => {
+   const loadFavourites = async () => {
     try {
       const favs = await AsyncStorage.getItem('favourites');
       if (favs) {
-        setFavourites(JSON.parse(favs));
+        setFavourites(JSON.parse(favs)); // ✅ FIX: `setFavourites` now exists
+      } else {
+        setFavourites([]);
       }
     } catch (error) {
       console.error('Error loading favourites:', error);
+      setFavourites([]);
     }
   };
   
@@ -299,28 +303,61 @@ const HomeScreen = ({ navigation }) => {
   //checklist
   const loadChecklist = async () => {
     try {
-      const storedChecklist = await AsyncStorage.getItem('checklist');
-      if (storedChecklist) {
-        setChecklist(JSON.parse(storedChecklist));
-      }
+        const storedChecklist = await AsyncStorage.getItem('checklist');
+        if (storedChecklist) {
+            setChecklist(JSON.parse(storedChecklist));  // ✅ Ensure it’s set correctly
+        } else {
+            setChecklist([]);  // ✅ Default to empty array
+        }
     } catch (error) {
-      console.error('Error loading checklist:', error);
+        console.error('Error loading checklist:', error);
+        setChecklist([]);
     }
-  };
+};
 
-  const toggleChecklist = async (item) => {
-    let updatedChecklist = [...checklist];
-    const index = updatedChecklist.findIndex(chk => chk.name === item.name);
+// ✅ Load checklist when component mounts
+useEffect(() => {
+    loadChecklist();
+}, []);
 
-    if (index === -1) {
-      updatedChecklist.push(item);
-    } else {
-      updatedChecklist.splice(index, 1);
-    }
+// ✅ Load checklist on component mount
+useEffect(() => {
+    loadChecklist();
+}, []);
 
-    setChecklist(updatedChecklist);
-    await AsyncStorage.setItem('checklist', JSON.stringify(updatedChecklist));
-  };
+const toggleChecklist = async (item) => {
+  try {
+      let updatedChecklist = Array.isArray(checklist) ? [...checklist] : [];
+
+      const index = updatedChecklist.findIndex(chk => chk.name === item.name);
+      if (index === -1) {
+          updatedChecklist.push({ ...item, items: [] }); // ✅ Ensure `items` field is initialized
+      } else {
+          updatedChecklist.splice(index, 1);
+      }
+
+      setChecklist(updatedChecklist);
+      await AsyncStorage.setItem('checklist', JSON.stringify(updatedChecklist));
+
+      // ✅ Navigate to Checklist screen after adding
+      navigation.navigate('Checklist');
+
+  } catch (error) {
+      console.error('Error updating checklist:', error);
+  }
+};
+
+<TouchableOpacity 
+  onPress={() => toggleChecklist(item)} 
+  style={styles.actionButton}
+>
+  <AntDesign 
+    name={Array.isArray(checklist) && checklist.some(chk => chk.name === item.name) ? 'checksquare' : 'checksquareo'} 
+    size={20} 
+    color="#32CD32" 
+  />
+</TouchableOpacity>
+
   return (
     <View style={styles.container}>
      
@@ -344,7 +381,11 @@ const HomeScreen = ({ navigation }) => {
   {/* Search Container */}
   <View style={styles.searchContainer}>
   <TouchableOpacity onPress={resetSearch} style={styles.searchIcon}>
-  <AntDesign name="reload1" size={18} color="#4CAF50" />
+  <AntDesign 
+  name={Array.isArray(checklist) && checklist.some(chk => chk.name === item.name) ? 'checksquare' : 'checksquareo'} 
+  size={20} 
+  color="#32CD32" 
+/>
   </TouchableOpacity>
     <TextInput
       style={[styles.inputContainer, { color: '#000' }]}
