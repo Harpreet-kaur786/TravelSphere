@@ -645,7 +645,7 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
       ))}
     </View>
-      <Text style={styles.sectionTitle}>Places to Travel</Text>
+      {/* <Text style={styles.sectionTitle}>Places to Travel</Text>
       <ScrollView 
   horizontal 
   showsHorizontalScrollIndicator={false} 
@@ -656,7 +656,7 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.regionText}>{region}</Text>
     </TouchableOpacity>
   ))}
-</ScrollView>
+</ScrollView> */}
 <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>Popular</Text>
 <FlatList
       data={popularDestinations}
