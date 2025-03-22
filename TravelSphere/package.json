@@ -2,9 +2,14 @@
   "name": "travelsphere",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+ "scripts": {
+  "start": "expo start",
+  "android": "expo start --android",
+  "ios": "expo start --ios",
+  "web": "expo start --web",
+  "test": "echo \"Error: no test specified\" && exit 1"
+}
+,
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -31,5 +36,8 @@
     "react-native-screens": "^4.4.0",
     "react-native-swiper": "^1.6.0",
     "react-native-vector-icons": "^10.2.0"
+  },
+  "devDependencies": {
+    "@react-native-community/cli": "^18.0.0"
   }
 }
