@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, ActivityIndicator } from 'react-native';
 import Swiper from 'react-native-swiper';
 import axios from 'axios';
 
@@ -12,17 +12,19 @@ const DetailsScreen = ({ route, navigation }) => {
     return null;
   }
 
+  const { name, description, bestTime, category, country, tips, attractions, image, 'co-ordinates': coordinates } = destination;
+
   const [weather, setWeather] = useState(null);
   const [weatherError, setWeatherError] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (destination['co-ordinates']) {
+    if (coordinates) {
       const fetchWeather = async () => {
         try {
           const apiKey = 'bbe8b53d8588c431ef2583584e243046';
           const response = await axios.get(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${destination['co-ordinates'].latitude}&lon=${destination['co-ordinates'].longitude}&appid=${apiKey}&units=metric`
+            `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${apiKey}&units=metric`
           );
 
           if (response.status === 200) {
@@ -40,8 +42,10 @@ const DetailsScreen = ({ route, navigation }) => {
       };
 
       fetchWeather();
+    } else {
+      setLoading(false); // If no coordinates, set loading to false immediately
     }
-  }, [destination]);
+  }, [coordinates]);
 
   const renderItem = ({ item }) => {
     if (item.isTitle) {
@@ -50,25 +54,34 @@ const DetailsScreen = ({ route, navigation }) => {
     return <Text style={styles.text}>{item.title}</Text>;
   };
 
+  const staticMapUrl = destination['co-ordinates']
+  ? `https://maps.gomaps.pro/maps/api/staticmap?center=${destination['co-ordinates'].latitude},${destination['co-ordinates'].longitude}&zoom=12&size=600x400&markers=color:red%7Clabel:A%7C${destination['co-ordinates'].latitude},${destination['co-ordinates'].longitude}&key=AlzaSyKCEnxPhd_T13y5e3WK0ouKaEeRoSGSG4R`
+  : null;
+
+  // Log the staticMapUrl to debug the map image generation
+  console.log('Static Map URL:', staticMapUrl);
+
   return (
     <FlatList
       data={[
-        { title: destination.name || 'No name available', isTitle: true },
+        { title: name || 'No name available', isTitle: true },
         { title: 'Description', isTitle: true },
-        { title: destination.description || 'No description available' },
+        { title: description || 'No description available' },
         { title: 'Best Time to Visit', isTitle: true },
-        { title: destination.bestTime || 'No time specified' },
+        { title: bestTime || 'No time specified' },
         { title: 'Category', isTitle: true },
-        { title: destination.category || 'No category specified' },
+        { title: category || 'No category specified' },
         { title: 'Country', isTitle: true },
-        { title: destination.country || 'No country specified' },
+        { title: country || 'No country specified' },
         { title: 'Tips', isTitle: true },
-        { title: destination.tips || 'No tips available' },
+        { title: tips || 'No tips available' },
         { title: 'Weather', isTitle: true },
         {
           title: weatherError
             ? 'Unable to fetch weather data. Please try again later.'
-            : weather ? (
+            : loading ? (
+              <ActivityIndicator size="large" color="#0000ff" />
+            ) : weather ? (
               <View style={styles.weatherContainer}>
                 <Text style={styles.weatherText}>
                   {weather.weather[0].description.toUpperCase()}, {weather.main.temp}°C
@@ -78,17 +91,25 @@ const DetailsScreen = ({ route, navigation }) => {
                 </Text>
               </View>
             ) : (
-              <Text style={styles.text}>Loading weather...</Text>
+              <Text style={styles.text}>No weather data available</Text>
             ),
         },
         { title: 'Attractions', isTitle: true },
-        ...(destination.attractions ? destination.attractions.map(attraction => ({ title: attraction })) : []),
+        ...(attractions ? attractions.map(attraction => ({ title: attraction })) : []),
+        { title: 'Location on Map', isTitle: true },
+        {
+          title: staticMapUrl ? (
+            <Image source={{ uri: staticMapUrl }} style={styles.mapImage} />
+          ) : (
+            <Text style={styles.text}>No map available</Text>
+          ),
+        },
       ]}
       keyExtractor={(item, index) => index.toString()}
       renderItem={renderItem}
       ListHeaderComponent={() => (
         <>
-          <Text style={styles.title}>{destination.name}</Text>
+          <Text style={styles.title}>{name}</Text>
           <Swiper style={styles.carousel} showsButtons autoplay>
             {destination.images && Array.isArray(destination.images) ? (
               destination.images.map((img, index) => (
@@ -112,7 +133,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#2f4f4f',
@@ -149,6 +170,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#154360', // Dark blue text for readability
+  },
+  mapImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 15,
+    marginTop: 10,
   },
 });
 
