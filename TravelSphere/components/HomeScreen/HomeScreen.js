@@ -53,7 +53,7 @@ const HomeScreen = ({ navigation }) => {
   const [newName, setNewName] = useState(userName);
   const [newProfilePhoto, setNewProfilePhoto] = useState(null);
   const [checklist, setChecklist] = useState([]);
-  const [favourites, setFavourites] = useState([]);
+  const [favourites, setFavourites] = useState([]); // ✅ Add this line
 
   const categories = ['Beach', 'Mountain', 'Waterfall'];
   //Popular
@@ -83,7 +83,7 @@ const HomeScreen = ({ navigation }) => {
     "Golden Temple": require("../../assets/GoldenTemple.jpg"),
    "Mount Fuji": require("../../assets/MountFuji.jpg"),
     "Niagara Falls": require("../../assets/NiagraFalls.jpg"),
-    "Paris": require("../../assets/Paris.jpg"),
+    Paris: require("../../assets/Paris.jpg"),
     "Taj Mahal": require("../../assets/TajMahal.jpg"),
   };
   
@@ -262,7 +262,7 @@ const HomeScreen = ({ navigation }) => {
         const countryMatch = destination.country && levenshtein(destination.country.toLowerCase(), normalizedSearchTerm) <= 3;
         const categoryMatch = destination.category && levenshtein(destination.category.toLowerCase(), normalizedSearchTerm) <= 3;
         // const popularity = destination.popularity;
-        const rating = destination.rating;
+        // const rating = destination.rating;
 
         return nameMatch || descriptionMatch || countryMatch || categoryMatch;
       });
@@ -304,16 +304,12 @@ const HomeScreen = ({ navigation }) => {
     }
 
 
-    // Sorting by rating or descending order or proximity
-    if (selectedSorting === 'rating') {
-      filtered = filtered.sort((a, b) => b.rating - a.rating); // Descending order by rating
-    } 
-    else if (selectedSorting === 'reverse') {
-      filtered = filtered.sort((a, b) =>  b.name.localeCompare(a.name)); // Ascending order by name
-    }
-    else if (selectedSorting === 'proximity') {
-          filtered.sort((a, b) => a.proximity - b.proximity);
-      }
+    // // Sorting by rating or popularity
+    // if (selectedSorting === 'rating') {
+    //   filtered = filtered.sort((a, b) => b.rating - a.rating); // Descending order by rating
+    // } else if (selectedSorting === 'popularity') {
+    //   filtered = filtered.sort((a, b) => a.popularity - b.popularity); // Ascending order by popularity
+    // }
 
     setDestinations(filtered);
   };
@@ -494,13 +490,6 @@ const HomeScreen = ({ navigation }) => {
               <Picker.Item label="India" value="India" />
               <Picker.Item label="Australia" value="Australia" />
               <Picker.Item label="France" value="France" />
-              <Picker.Item label="Canada" value="Canada" />
-              <Picker.Item label="England" value="England" />
-              <Picker.Item label="Sweden" value="Sweden" />
-              <Picker.Item label="China" value="China" />
-              <Picker.Item label="USA" value="USA" />
-              <Picker.Item label="Japan" value="Japan" />
-
             </Picker>
 
             <Picker
@@ -509,7 +498,7 @@ const HomeScreen = ({ navigation }) => {
               onValueChange={(itemValue) => setSelectedCategory(itemValue)}
             >
               <Picker.Item label="Select Category" value="" />
-              <Picker.Item label="Architectural" value="Architectural" />
+              <Picker.Item label="Beach" value="Beach" />
               <Picker.Item label="Nature" value="Nature" />
               <Picker.Item label="Historical" value="Historical" />
               <Picker.Item label="Adventure" value="Adventure" />
@@ -547,16 +536,15 @@ const HomeScreen = ({ navigation }) => {
 
             </Picker>
 
-            <Picker
+            {/* <Picker
               selectedValue={selectedSorting}
               style={styles.picker}
               onValueChange={(itemValue) => setSelectedSorting(itemValue)}
             >
               <Picker.Item label="Sort By" value="" />
               <Picker.Item label="Rating" value="rating" />
-              <Picker.Item label="Reverse Order" value="reverse" />
-              <Picker.Item label="Proximity" value="proximity" />
-            </Picker>
+              <Picker.Item label="Popularity" value="popularity" />
+            </Picker> */}
 
             {/* Reset button with loading indicator
             <TouchableOpacity onPress={resetFilters} style={styles.resetButton}>
