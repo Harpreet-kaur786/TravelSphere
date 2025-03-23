@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { TextInput, View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
-import { firestore, collection, getDocs, query, where } from '../../firebase';
-import { AntDesign } from '@expo/vector-icons';
+import { TextInput, View, Text, FlatList, Image, TouchableOpacity,ActivityIndicator } from 'react-native';
+import { firestore } from '../../firebase';  
+import { collection, getDocs, query, where, addDoc, serverTimestamp } from "firebase/firestore";
+
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import styles from './styles';
@@ -12,6 +14,10 @@ import {Button} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage"
 import { ScrollView } from 'react-native-gesture-handler';
+import { FAB } from 'react-native-paper';
+
+
+
 const storage = getStorage();
 const levenshtein = (a, b) => {
   const tmp = [];
@@ -86,7 +92,49 @@ const HomeScreen = ({ navigation }) => {
     Paris: require("../../assets/Paris.jpg"),
     "Taj Mahal": require("../../assets/TajMahal.jpg"),
   };
+
+
+
+
+
+  //Feedback
+
+
+  const [modalVisible, setModalVisible] = useState(false);
+    const [feedback, setFeedback] = useState("");
+    const [name, setName] = useState("");
+    const [rating, setRating] = useState(0);
   
+    const [anonymous, setAnonymous] = useState(false);
+
+  const submitFeedback = async () => {
+    if (!feedback.trim()) {
+        alert("Please enter feedback before submitting.");
+        return;
+    }
+
+    setLoading(true);
+    try {
+        await addDoc(collection(firestore, "feedback"), {
+            feedback: feedback.trim(),
+            name: anonymous ? "Anonymous" : name || "Anonymous",
+            rating: rating || "No Rating",
+            timestamp: serverTimestamp(),
+        });
+
+        alert("Feedback submitted successfully!");
+        setFeedback("");
+        setName("");
+        setRating(0);
+        setAnonymous(false);
+        setModalVisible(false);
+    } catch (error) {
+        console.error("Error submitting feedback:", error);
+        alert("Failed to submit feedback. Please try again.");
+    } finally {
+        setLoading(false);
+    }
+};
 
   const user = auth.currentUser;
   // Request permission for image picker
@@ -684,6 +732,91 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
       )}
     />
+    {/* Floating Feedback Button */}
+ {/* Floating Feedback Button */}
+ <FAB 
+                style={{
+                    position: "absolute",
+                    bottom: 20,
+                    right: 20,
+                    backgroundColor: "#007bff"
+                }}
+                icon="message-text"
+                label="Feedback"
+                onPress={() => setModalVisible(true)}
+            />
+
+            {/* Feedback Modal */}
+            <Modal visible={modalVisible} transparent={true} animationType="slide">
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.title}>Give Feedback</Text>
+
+                        {/* Name Input */}
+                        {!anonymous && (
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Your Name (Optional)"
+                                value={name}
+                                onChangeText={setName}
+                            />
+                        )}
+
+                        {/* Feedback Input */}
+                        <TextInput
+                            style={styles.textArea}
+                            placeholder="Enter your feedback..."
+                            multiline
+                            value={feedback}
+                            onChangeText={setFeedback}
+                        />
+
+                        {/* Rating Selection */}
+                        <View style={styles.ratingContainer}>
+                            <Text style={{ fontSize: 16, fontWeight: "bold" }}>Rate Us:</Text>
+                            <View style={{ flexDirection: "row" }}>
+                                {[1, 2, 3, 4, 5].map((num) => (
+                                    <TouchableOpacity key={num} onPress={() => setRating(num)}>
+                                        <MaterialIcons 
+                                            name="star" 
+                                            size={30} 
+                                            color={rating >= num ? "#f4c542" : "#ccc"} 
+                                        />
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        </View>
+
+                        {/* Anonymous Toggle */}
+                        <TouchableOpacity 
+                            style={styles.checkboxContainer} 
+                            onPress={() => setAnonymous(!anonymous)}
+                        >
+                            <MaterialIcons 
+                                name={anonymous ? "check-box" : "check-box-outline-blank"} 
+                                size={24} 
+                                color="#007bff" 
+                            />
+                            <Text style={styles.checkboxText}>Submit as Anonymous</Text>
+                        </TouchableOpacity>
+
+                        {/* Submit Button */}
+                        <TouchableOpacity 
+                            style={[styles.button, loading && { backgroundColor: "#ccc" }]} 
+                            onPress={submitFeedback} 
+                            disabled={loading}
+                        >
+                            {loading ? <ActivityIndicator color="white" /> : <Text style={styles.buttonText}>Submit</Text>}
+                        </TouchableOpacity>
+
+                        {/* Close Button */}
+                        <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+                            <Text style={{ fontSize: 16, color: "#007bff" }}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
     </View>
   );
 };

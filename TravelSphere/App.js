@@ -12,6 +12,7 @@ import SignUpScreen from './components/SignUpScreen/SignUp';
 import { TouchableOpacity, Text } from 'react-native';
 import FavouriteScreen from './components/FavouriteScreen/FavouriteScreen';
 import ChecklistScreen from './components/ChecklistScreen/ChecklistScreen';
+import FeedbackList from './components/FeedbackList/FeedbackList';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -23,6 +24,7 @@ function DrawerNavigator() {
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name='Favourite' component={FavouriteScreen}/>
       <Drawer.Screen name="Checklist" component={ChecklistScreen} />
+      <Drawer.Screen name='Feedback List' component={FeedbackList}/>
     </Drawer.Navigator>
   );
 }
