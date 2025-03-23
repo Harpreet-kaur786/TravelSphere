@@ -17,7 +17,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { FAB } from 'react-native-paper';
 
 
-
+//Storage
 const storage = getStorage();
 const levenshtein = (a, b) => {
   const tmp = [];
@@ -62,7 +62,7 @@ const HomeScreen = ({ navigation }) => {
   const [favourites, setFavourites] = useState([]); // ✅ Add this line
 
   const categories = ['Beach', 'Mountain', 'Waterfall'];
-  //Popular
+  //Popular destinations
   const [popularDestinations, setPopularDestinations] = useState([]);
   useEffect(() => {
     const fetchPopularDestinations = async () => {
@@ -93,13 +93,7 @@ const HomeScreen = ({ navigation }) => {
     "Taj Mahal": require("../../assets/TajMahal.jpg"),
   };
 
-
-
-
-
-  //Feedback
-
-
+  //Feedback session
   const [modalVisible, setModalVisible] = useState(false);
     const [feedback, setFeedback] = useState("");
     const [name, setName] = useState("");
@@ -136,6 +130,7 @@ const HomeScreen = ({ navigation }) => {
     }
 };
 
+   //Profile name and Profile photo functionality
   const user = auth.currentUser;
   // Request permission for image picker
   const requestPermissions = async () => {
@@ -151,7 +146,6 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     if (user) {
       // Fetch user data from Firestore or AsyncStorage
-      // For example, using AsyncStorage or Firestore
       AsyncStorage.getItem('userProfile').then((profileData) => {
         if (profileData) {
           const profile = JSON.parse(profileData);
@@ -163,8 +157,8 @@ const HomeScreen = ({ navigation }) => {
   }, [user]);
 
   const handleEditProfile = () => {
-    setNewName(userName); // Ensure the input field shows the current name
-    setIsEditingProfile(true); // Enable editing mode
+    setNewName(userName); 
+    setIsEditingProfile(true); 
   };
   
     
@@ -186,13 +180,13 @@ const HomeScreen = ({ navigation }) => {
         (error) => console.error('Upload error: ', error),
         async () => {
           const photoURL = await getDownloadURL(uploadTask.snapshot.ref);
-          // Save both name and photoURL
+         
           await saveUserProfile(newName, photoURL);
-          setUserProfilePhoto(photoURL); // Update the profile image state
+          setUserProfilePhoto(photoURL); 
         }
       );
     } else {
-      // If no new photo, just save the current photo and name
+      
       await saveUserProfile(newName, userProfilePhoto);
     }
     
@@ -207,11 +201,11 @@ const HomeScreen = ({ navigation }) => {
     });
   
     if (!result.canceled && result.assets.length > 0) {
-      // Update the state with the selected image URI
+   
       const selectedUri = result.assets[0].uri;
       console.log('Selected Image URI:', selectedUri);
       
-      // Set the preview URI for the profile photo
+     
       setNewProfilePhoto(selectedUri); 
     }
   };
@@ -219,8 +213,8 @@ const HomeScreen = ({ navigation }) => {
   const saveUserProfile = async (name, photoUrl) => {
     const profileData = { name, photoUrl };
     await AsyncStorage.setItem('userProfile', JSON.stringify(profileData));
-    setUserName(name); // Update the name immediately in the state
-    setUserProfilePhoto(photoUrl); // Update the photo immediately in the state
+    setUserName(name); 
+    setUserProfilePhoto(photoUrl); 
   };
 
   useEffect(() => {
@@ -260,7 +254,7 @@ const HomeScreen = ({ navigation }) => {
     try {
       const favs = await AsyncStorage.getItem('favourites');
       if (favs) {
-        setFavourites(JSON.parse(favs)); // ✅ Ensure JSON data is parsed properly
+        setFavourites(JSON.parse(favs)); 
       }
     } catch (error) {
       console.error('Error loading favourites:', error);
@@ -714,9 +708,9 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity 
           style={{ marginRight: 10 }} 
           onPress={() => {
-            // Navigate to DetailsScreen and pass destination item
+            
             navigation.navigate('Details', {
-              item: item, // Pass the entire item (destination) to the DetailsScreen
+              item: item, 
             });
           }}
         >
@@ -726,7 +720,7 @@ const HomeScreen = ({ navigation }) => {
               style={{ width: 100, height: 100, borderRadius: 10 }}
             />
           ) : (
-            <Text>No Image</Text> // Fallback if no image is found
+            <Text>No Image</Text> 
           )}
           <Text>{item.name}</Text>
         </TouchableOpacity>
@@ -801,7 +795,7 @@ const HomeScreen = ({ navigation }) => {
                         </TouchableOpacity>
 
                         {/* Submit Button */}
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             style={[styles.button, loading && { backgroundColor: "#ccc" }]} 
                             onPress={submitFeedback} 
                             disabled={loading}
