@@ -1,15 +1,20 @@
+
+
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
 import { auth } from "../../firebase";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import styles from './styles'
+import styles from './styles';
+
 const SignUpScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [usernameError, setUsernameError] = useState("");
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
@@ -20,30 +25,23 @@ const SignUpScreen = ({ navigation }) => {
   const validateInputs = () => {
     let isValid = true;
 
-   // Username Validation
-if (!username) {
-  setUsernameError("Username is required.");
-  isValid = false;
-} else if (username.length > 8) {
-  setUsernameError("Username cannot be more than 8 characters.");
-  isValid = false;
-} else if (!/(?=.*[a-z])(?=.*\d)(?=.*[\W_])/.test(username)) {
-  setUsernameError("Username must contain at least 1 lowercase letter, 1 number, and 1 special character.");
-  isValid = false;
-} else {
-  setUsernameError("");
-}
+    // First Name Validation
+    if (!firstName) {
+      setFirstNameError("First name is required.");
+      isValid = false;
+    } else {
+      setFirstNameError("");
+    }
 
-// ✅ Generate Suggestions if Invalid
-if (!isValid) {
-  const randomSuffix = Math.floor(Math.random() * 1000); // Random number for uniqueness
-  const suggestion1 = `user${randomSuffix}!`; // Example: user123!
-  const suggestion2 = `u${randomSuffix}_pass`; // Example: u789_pass
-  setUsernameError(prevError => `${prevError}\nTry: ${suggestion1} or ${suggestion2}`);
-}
+    // Last Name Validation
+    if (!lastName) {
+      setLastNameError("Last name is required.");
+      isValid = false;
+    } else {
+      setLastNameError("");
+    }
 
-
-    //  Email Validation
+    // Email Validation
     if (!email) {
       setEmailError("Email is required.");
       isValid = false;
@@ -74,7 +72,7 @@ if (!isValid) {
       setPasswordError("");
     }
 
-    //  Confirm Password Validation
+    // Confirm Password Validation
     if (password !== confirmPassword) {
       setConfirmPasswordError("Passwords do not match.");
       isValid = false;
@@ -113,53 +111,64 @@ if (!isValid) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
+    <ImageBackground source={require("../../assets/Signup.jpg")} style={styles.container}>
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Sign Up</Text>
 
-      <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-        style={styles.input}
-      />
-      {usernameError ? <Text style={styles.errorText}>{usernameError}</Text> : null}
+        <TextInput
+          placeholder="First Name"
+          value={firstName}
+          onChangeText={setFirstName}
+          style={styles.input}
+        />
+        {firstNameError ? <Text style={styles.errorText}>{firstNameError}</Text> : null}
 
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-        keyboardType="email-address"
-      />
-      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+        <TextInput
+          placeholder="Last Name"
+          value={lastName}
+          onChangeText={setLastName}
+          style={styles.input}
+        />
+        {lastNameError ? <Text style={styles.errorText}>{lastNameError}</Text> : null}
 
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
-      {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+          keyboardType="email-address"
+        />
+        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
-      <TextInput
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-        style={styles.input}
-      />
-      {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          style={styles.input}
+        />
+        {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
-      {verificationMessage ? <Text style={styles.verificationText}>{verificationMessage}</Text> : null}
+        <TextInput
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+          style={styles.input}
+        />
+        {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
 
-      <TouchableOpacity onPress={handleSignUp} style={styles.button} disabled={isLoading}>
-        <Text style={styles.buttonText}>{isLoading ? "Signing Up..." : "Sign Up"}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backText}>← Back</Text>
-      </TouchableOpacity>
-    </View>
+        {verificationMessage ? <Text style={styles.verificationText}>{verificationMessage}</Text> : null}
+
+        <TouchableOpacity onPress={handleSignUp} style={styles.button} disabled={isLoading}>
+          <Text style={styles.buttonText}>{isLoading ? "Signing Up..." : "Sign Up"}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Text style={styles.backText}>← Back</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 

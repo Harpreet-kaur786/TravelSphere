@@ -11,7 +11,7 @@ import LoginScreen from './components/LoginScreen/LoginScreen';
 import SignUpScreen from './components/SignUpScreen/SignUp';
 import { TouchableOpacity, Text } from 'react-native';
 import FavouriteScreen from './components/FavouriteScreen/FavouriteScreen';
-
+import ChecklistScreen from './components/ChecklistScreen/ChecklistScreen';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -22,6 +22,7 @@ function DrawerNavigator() {
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name='Favourite' component={FavouriteScreen}/>
+      <Drawer.Screen name="Checklist" component={ChecklistScreen} />
     </Drawer.Navigator>
   );
 }
@@ -50,7 +51,7 @@ const App = () => {
           />
         </Stack.Navigator>
       </NavigationContainer>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

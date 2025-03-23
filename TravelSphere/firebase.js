@@ -1,6 +1,5 @@
-
 // firebaseConfig.js
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'firebase/app';
 import { 
   getAuth, 
   createUserWithEmailAndPassword, 
@@ -8,7 +7,7 @@ import {
   sendEmailVerification, 
   onAuthStateChanged, 
   signOut 
-} from "firebase/auth";
+} from 'firebase/auth';
 import { 
   getFirestore, 
   collection, 
@@ -16,16 +15,16 @@ import {
   query, 
   where, 
   addDoc 
-} from "firebase/firestore";
+} from 'firebase/firestore';
 
 // Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyA56tuwcbLsDcYYSaXPUrR_FJTlayC_maE",
-  authDomain: "travelsphere-64705.firebaseapp.com",
-  projectId: "travelsphere-64705",
-  storageBucket: "travelsphere-64705.firebasestorage.app",
-  messagingSenderId: "610542033934",
-  appId: "1:610542033934:web:64da592e3f005260c7705f"
+  apiKey: 'AIzaSyA56tuwcbLsDcYYSaXPUrR_FJTlayC_maE',
+  authDomain: 'travelsphere-64705.firebaseapp.com',
+  projectId: 'travelsphere-64705',
+  storageBucket: 'travelsphere-64705.firebasestorage.app',
+  messagingSenderId: '610542033934',
+  appId: '1:610542033934:web:64da592e3f005260c7705f',
 };
 
 // Initialize Firebase
@@ -113,13 +112,13 @@ const logoutUser = async () => {
  */
 const addDestination = async (name, location, description) => {
   try {
-    await addDoc(collection(firestore, "destinations"), {
+    await addDoc(collection(firestore, 'destinations'), {
       name,
       location,
       description,
-      createdAt: new Date()
+      createdAt: new Date(),
     });
-    return { success: true, message: "Destination added successfully!" };
+    return { success: true, message: 'Destination added successfully!' };
   } catch (error) {
     return { success: false, message: error.message };
   }
@@ -130,9 +129,9 @@ const addDestination = async (name, location, description) => {
  */
 const getDestinations = async () => {
   try {
-    const destinationsRef = collection(firestore, "destinations");
+    const destinationsRef = collection(firestore, 'destinations');
     const destinationsSnapshot = await getDocs(destinationsRef);
-    const destinations = destinationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const destinations = destinationsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     return { success: true, destinations };
   } catch (error) {
     return { success: false, message: error.message };
@@ -144,13 +143,13 @@ const getDestinations = async () => {
  */
 const searchDestination = async (searchQuery) => {
   try {
-    const destinationsRef = collection(firestore, "destinations");
-    const q = query(destinationsRef, where("name", "==", searchQuery));
+    const destinationsRef = collection(firestore, 'destinations');
+    const q = query(destinationsRef, where('name', '==', searchQuery));
     const querySnapshot = await getDocs(q);
-    const results = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    
+    const results = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
     if (results.length === 0) {
-      return { success: false, message: "No destinations found." };
+      return { success: false, message: 'No destinations found.' };
     }
 
     return { success: true, results };
@@ -159,6 +158,20 @@ const searchDestination = async (searchQuery) => {
   }
 };
 
+/**
+ * Fetches popular destinations.
+ */
+const fetchDestinations = async () => {
+  try {
+    const q = query(collection(firestore, 'popularDestinations'), where('isPopular', '==', true));
+    const querySnapshot = await getDocs(q);
+    const destinations = querySnapshot.docs.map((doc) => doc.data());
+    return destinations;
+  } catch (error) {
+    console.error('Error fetching destinations:', error);
+    return [];
+  }
+};
 
 export { 
   auth, 
@@ -173,5 +186,6 @@ export {
   signUpUser, 
   loginUser, 
   checkAuthStatus, 
-  logoutUser 
+  logoutUser, 
+  fetchDestinations 
 };

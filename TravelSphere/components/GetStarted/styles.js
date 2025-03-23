@@ -1,32 +1,54 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-    container: { 
-      flex: 1, 
-      justifyContent: "center", 
-      alignItems: "center", 
-      backgroundColor: "#f0f8ff" 
-    },
-    title: { 
-      fontSize: 28, 
-      fontWeight: "bold", 
-      marginBottom: 20 
-    },
-    button: { 
-      backgroundColor: "#007BFF", 
-      padding: 15, 
-      borderRadius: 8, 
-      marginBottom: 10 
-    },
-    buttonText: { 
-      color: "white", 
-      fontSize: 18 
-    },
-    linkText: { 
-      color: "#007BFF", 
-      fontSize: 16, 
-      marginTop: 10 
-    },
-  });
-  export default styles;
+  container: {
+    flex: 1,
+    position: "relative",
+  },
+  video: {
+    ...StyleSheet.absoluteFillObject, 
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    paddingBottom: 50,
+    paddingHorizontal: 20,
+    backgroundColor: "rgba(0, 0, 0, 0.3)", 
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "white",
+    textTransform: "uppercase",
+    letterSpacing: 2,
+  },
+  subtitle: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "white",
+    textTransform: "uppercase",
+    marginBottom: 10,
+  },
+  description: {
+    fontSize: 14,
+    color: "white",
+    textAlign: "center",
+    marginBottom: 20,
+    paddingHorizontal: 10,
+  },
+  button: {
+    backgroundColor: "#3DB2FF",
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+});
 
+export default styles;

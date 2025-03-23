@@ -1,21 +1,45 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { Video } from "expo-av";
+import { useNavigation } from "@react-navigation/native";
 import styles from "./styles";
-const GetStartedScreen = ({ navigation }) => {
+
+const GetStartedScreen = () => {
+  const navigation = useNavigation();
+
+  // Hide header if needed
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to TravelSphere</Text>
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={() => navigation.navigate("Login")}
-      >
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        onPress={() => navigation.navigate("SignUp")}
-      >
-        <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
-      </TouchableOpacity>
+      {/* Video Background */}
+      <Video
+        source={require("../../assets/Started.mp4")}
+        style={styles.video}
+        resizeMode="cover"
+        shouldPlay
+        isLooping
+        isMuted
+      />
+
+      {/* Overlay Content */}
+      <View style={styles.overlay}>
+        <Text style={styles.title}>EXPLORE</Text>
+        <Text style={styles.subtitle}>UNSEEN EARTH</Text>
+        <Text style={styles.description}>
+          TravelvSphere is a web-based collaborative travel guide based on the
+          wiki format and book hotels by users.
+        </Text>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Text style={styles.buttonText}>Get Started</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
