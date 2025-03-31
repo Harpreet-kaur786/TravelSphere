@@ -390,7 +390,6 @@ weatherIcon: {
   marginBottom: 10,
 },
 
-// Add a temperatureText style to make it stand out
 
 
 });
