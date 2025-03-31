@@ -74,7 +74,7 @@ const DetailsScreen = ({ route, navigation }) => {
         { title: 'Country', isTitle: true },
         { title: country || 'No country specified' },
         { title: 'Tips', isTitle: true },
-        { title: tips || 'No tips available' },
+        { title: tips || 'No tips available for selected destination.' },
         { title: 'Weather', isTitle: true },
         {
           title: weatherError
