@@ -14,6 +14,7 @@ import {
   getDocs, 
   query, 
   where, 
+  orderBy, 
   addDoc 
 } from 'firebase/firestore';
 
@@ -34,9 +35,6 @@ const firestore = getFirestore(app);
 
 /* =================== Authentication Functions =================== */
 
-/**
- * Signs up a user and sends a verification email.
- */
 const signUpUser = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -54,9 +52,6 @@ const signUpUser = async (email, password) => {
   }
 };
 
-/**
- * Logs in a user after verifying their email.
- */
 const loginUser = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -86,16 +81,10 @@ const loginUser = async (email, password) => {
   }
 };
 
-/**
- * Observes the authentication state.
- */
 const checkAuthStatus = (callback) => {
   return onAuthStateChanged(auth, callback);
 };
 
-/**
- * Logs out the current user.
- */
 const logoutUser = async () => {
   try {
     await signOut(auth);
@@ -107,9 +96,6 @@ const logoutUser = async () => {
 
 /* =================== Firestore Functions (Destination Storage) =================== */
 
-/**
- * Adds a new destination to Firestore.
- */
 const addDestination = async (name, location, description) => {
   try {
     await addDoc(collection(firestore, 'destinations'), {
@@ -124,9 +110,6 @@ const addDestination = async (name, location, description) => {
   }
 };
 
-/**
- * Retrieves all destinations from Firestore.
- */
 const getDestinations = async () => {
   try {
     const destinationsRef = collection(firestore, 'destinations');
@@ -138,9 +121,6 @@ const getDestinations = async () => {
   }
 };
 
-/**
- * Searches destinations by name.
- */
 const searchDestination = async (searchQuery) => {
   try {
     const destinationsRef = collection(firestore, 'destinations');
@@ -158,9 +138,6 @@ const searchDestination = async (searchQuery) => {
   }
 };
 
-/**
- * Fetches popular destinations.
- */
 const fetchDestinations = async () => {
   try {
     const q = query(collection(firestore, 'popularDestinations'), where('isPopular', '==', true));
@@ -173,6 +150,46 @@ const fetchDestinations = async () => {
   }
 };
 
+/* =================== Firestore Review Functions =================== */
+
+const addReview = async (destinationName, reviewText, rating, userEmail) => {
+  try {
+    const ratingNumber = parseInt(rating, 10);
+    if (!reviewText.trim() || isNaN(ratingNumber) || ratingNumber < 1 || ratingNumber > 5) {
+      return { success: false, message: "Invalid review or rating. Rating must be between 1 and 5." };
+    }
+
+    await addDoc(collection(firestore, "reviews"), {
+      destinationName,
+      text: reviewText,
+      rating: ratingNumber,
+      createdAt: new Date(),
+      userEmail,
+    });
+
+    return { success: true, message: "Review submitted successfully!" };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+};
+
+const getReviews = async (destinationName) => {
+  try {
+    const q = query(
+      collection(firestore, "reviews"), 
+      where("destinationName", "==", destinationName),
+      orderBy("createdAt", "desc")
+    );
+
+    const querySnapshot = await getDocs(q);
+    const reviews = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    return { success: true, reviews };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+};
+
 export { 
   auth, 
   firestore, 
@@ -180,6 +197,7 @@ export {
   getDocs, 
   query, 
   where, 
+  orderBy, 
   addDestination, 
   getDestinations, 
   searchDestination, 
@@ -187,5 +205,7 @@ export {
   loginUser, 
   checkAuthStatus, 
   logoutUser, 
-  fetchDestinations 
+  fetchDestinations,
+  addReview,
+  getReviews
 };
