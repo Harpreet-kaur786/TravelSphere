@@ -285,12 +285,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#4CAF50', 
     paddingVertical: 10, 
     paddingHorizontal: 15, 
-    borderRadius: 10, 
+    borderRadius: 10, // Reduce border radius for a more box-like appearance
     marginRight: 10, 
-    width: 100,  
-    height: 50,  
-    justifyContent: 'center', 
-    alignItems: 'center', 
+    width: 100,  // Set a fixed width to make it more box-like
+    height: 50,  // Reduce height
+    justifyContent: 'center', // Center text vertically
+    alignItems: 'center', // Center text horizontally
   },
   
   
@@ -300,100 +300,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   
-  sectionTitle: { 
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginVertical: 10
-   },
-  destinationCard: { 
-    width: 150, 
-    backgroundColor: '#fff', 
-    borderRadius: 10, 
-    marginRight: 10, 
-    padding: 10 
-  },
-  destinationImage: { 
-    width: '100%', 
-    height: 100, 
-    borderRadius: 10 
-  },
-  destinationName: { 
-    fontSize: 16, 
-    fontWeight: 'bold', 
-    marginVertical: 5 
-  },
-  rating: { 
-    fontSize: 14, 
-    color: 'gold' 
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-},
-modalContent: {
-    width: "85%",
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
-    alignItems: "center",
-},
-title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
-},
-input: {
-    width: "100%",
-    height: 40,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-},
-textArea: {
-    width: "100%",
-    height: 80,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    textAlignVertical: "top",
-    marginBottom: 10,
-},
-ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-},
-checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-},
-checkboxText: {
-    marginLeft: 5,
-    fontSize: 16,
-},
-button: {
-    width: "100%",
-    backgroundColor: "#007bff",
-    padding: 12,
-    borderRadius: 5,
-    alignItems: "center",
-    marginBottom: 10,
-},
-buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-},
-closeButton: {
-    marginTop: 5,
-},
+  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginVertical: 10 },
+  destinationCard: { width: 150, backgroundColor: '#fff', borderRadius: 10, marginRight: 10, padding: 10 },
+  destinationImage: { width: '100%', height: 100, borderRadius: 10 },
+  destinationName: { fontSize: 16, fontWeight: 'bold', marginVertical: 5 },
+  rating: { fontSize: 14, color: 'gold' }
 });
 
 
