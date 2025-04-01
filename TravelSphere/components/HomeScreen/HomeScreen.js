@@ -1,45 +1,24 @@
 import React, { useState, useEffect } from "react";
-
-import {
-  TextInput,
-  View,
-  Text,
-  FlatList,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-
+import {TextInput,View,Text,FlatList,Image,TouchableOpacity} from "react-native";
 import { firestore, collection, getDocs, query, where } from "../../firebase";
-
 import { AntDesign } from "@expo/vector-icons";
-
 import { signOut } from "firebase/auth";
-
 import { auth } from "../../firebase";
-
 import styles from "./styles";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { Picker } from "@react-native-picker/picker";
-
 import { Modal } from "react-native";
-
 import { Button } from "react-native";
-
 import * as ImagePicker from "expo-image-picker";
-
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-
 import { ScrollView } from "react-native-gesture-handler";
 
 const storage = getStorage();
-
 const levenshtein = (a, b) => {
   const tmp = [];
 
@@ -382,27 +361,27 @@ const HomeScreen = ({ navigation }) => {
 
         const nameMatch =
           levenshtein(destination.name.toLowerCase(), normalizedSearchTerm) <=
-          3;
+          2;
 
         const descriptionMatch =
           levenshtein(
             destination.description.toLowerCase(),
             normalizedSearchTerm
-          ) <= 3;
+          ) <= 2;
 
         const countryMatch =
           destination.country &&
           levenshtein(
             destination.country.toLowerCase(),
             normalizedSearchTerm
-          ) <= 3;
+          ) <= 2;
 
         const categoryMatch =
           destination.category &&
           levenshtein(
             destination.category.toLowerCase(),
             normalizedSearchTerm
-          ) <= 3;
+          ) <= 2;
 
         // const popularity = destination.popularity;
 
@@ -434,7 +413,7 @@ const HomeScreen = ({ navigation }) => {
 
     if (selectedCountry) {
       filtered = filtered.filter(
-        (destination) => destination.country === selectedCountry.toLowerCase()
+        (destination) => destination.country.toLowerCase() === selectedCountry.toLowerCase()
       );
     }
 
@@ -442,7 +421,7 @@ const HomeScreen = ({ navigation }) => {
 
     if (selectedCategory) {
       filtered = filtered.filter(
-        (destination) => destination.category === selectedCategory.toLowerCase()
+        (destination) => destination.category.toLowerCase() === selectedCategory.toLowerCase()
       );
     }
 
@@ -450,8 +429,7 @@ const HomeScreen = ({ navigation }) => {
 
     if (selectedPopularity) {
       filtered = filtered.filter(
-        (destination) =>
-          destination.popularity.toString() === selectedPopularity
+        (destination) => destination.popularity === Number(selectedPopularity)
       );
     }
 
@@ -459,19 +437,28 @@ const HomeScreen = ({ navigation }) => {
 
     if (selectedRating) {
       filtered = filtered.filter(
-        (destination) => destination.rating.toString() === selectedRating
+        (destination) => destination.rating === Number(selectedRating)
       );
     }
 
     // Sorting by rating or descending order or proximity
 
+    // if (selectedSorting === "rating") {
+    //   filtered = filtered.sort((a, b) => b.rating - a.rating); // Descending order by rating
+    // } else if (selectedSorting === "reverse") {
+    //   filtered = filtered.sort((a, b) => b.name.localeCompare(a.name)); // Ascending order by name
+    // } else if (selectedSorting === "proximity") {
+    //   filtered.sort((a, b) => a.proximity - b.proximity);
+    // }
+    
     if (selectedSorting === "rating") {
-      filtered = filtered.sort((a, b) => b.rating - a.rating); // Descending order by rating
+      filtered = filtered.slice().sort((a, b) => b.rating - a.rating);
     } else if (selectedSorting === "reverse") {
-      filtered = filtered.sort((a, b) => b.name.localeCompare(a.name)); // Ascending order by name
+      filtered = filtered.slice().sort((a, b) => b.name.localeCompare(a.name));
     } else if (selectedSorting === "proximity") {
-      filtered.sort((a, b) => a.proximity - b.proximity);
+      filtered = filtered.slice().sort((a, b) => a.proximity - b.proximity);
     }
+    
 
     setDestinations(filtered);
   };
