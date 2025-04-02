@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',  
     marginBottom: 10,      
   },
-  
   profileSection: {
     alignItems: 'flex-start',
     flexDirection: 'column', 
@@ -23,14 +22,12 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
   },
-  
   profileInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap', 
     justifyContent: 'center',
   },
-  
   profileName: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -38,7 +35,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
-  
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -69,10 +65,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#ccc', 
       width: '100%', 
       position: 'absolute', 
-    
-     
-    }
-,  
+    },  
   filterContainer: {
     marginBottom: 20,
   },
@@ -148,8 +141,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#555',
   },
-
-
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -157,7 +148,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Semi-transparent background for a modern look
     padding: 20,
   },
-  
   modalContent: {
     width: '90%',
     backgroundColor: '#fff',
@@ -170,13 +160,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
   },
-  
   profileImagePreviewContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
   },
-  
   profileImageModal: {
     width: 120,
     height: 120,
@@ -184,7 +172,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#ddd',
   },
-  
   editIcon: {
     position: 'absolute',
     bottom: 0,
@@ -194,7 +181,6 @@ const styles = StyleSheet.create({
     padding: 6,
     elevation: 5,
   },
-  
   input: {
     width: '100%',
     borderWidth: 1,
@@ -206,7 +192,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: '#f8f8f8',
   },
-  
   uploadButton: {
     backgroundColor: '#4CAF50',
     paddingVertical: 12,
@@ -215,19 +200,16 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     alignItems: 'center',
   },
-  
   uploadButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
   },
-  
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
   },
-  
   saveButton: {
     backgroundColor: '#2196F3',
     paddingVertical: 12,
@@ -236,7 +218,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
     alignItems: 'center',
   },
-  
   cancelButton: {
     backgroundColor: '#f44336',
     paddingVertical: 12,
@@ -244,19 +225,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '500',
   },
-
   TravelSection:{
     fontSize: 20, fontWeight: "bold", marginLeft: 20, marginBottom: 10
   },
   categoryContainer: {
     flexDirection: 'row',
-    marginTop: 20,
+    marginTop: 5,
+    marginBottom: 0,
   },
   categoryButton: {
     flexDirection: 'row',
@@ -280,7 +260,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10, 
     paddingHorizontal: 5, 
   },
-  
   regionButton: {
     backgroundColor: '#4CAF50', 
     paddingVertical: 10, 
@@ -292,20 +271,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Center text vertically
     alignItems: 'center', // Center text horizontally
   },
-  
-  
   regionText: {
     color: 'white',
     fontSize: 14, 
     fontWeight: 'bold',
   },
-  
   sectionTitle: { fontSize: 18, fontWeight: 'bold', marginVertical: 10 },
   destinationCard: { width: 150, backgroundColor: '#fff', borderRadius: 10, marginRight: 10, padding: 10 },
   destinationImage: { width: '100%', height: 100, borderRadius: 10 },
   destinationName: { fontSize: 16, fontWeight: 'bold', marginVertical: 5 },
   rating: { fontSize: 14, color: 'gold' }
 });
-
-
 export default styles;
