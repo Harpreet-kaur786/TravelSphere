@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AntDesign } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 
-const ChecklistScreen = () => {
+const ChecklistScreen = ({ navigation }) => {
   const [checklist, setChecklist] = useState([]);
   const [todoLists, setTodoLists] = useState({});
   const [newTodo, setNewTodo] = useState({});
@@ -94,7 +94,6 @@ const ChecklistScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {/* Add Task Input (Always on Top) */}
             <View style={styles.addTaskContainer}>
               <TextInput
                 style={styles.todoInput}
@@ -107,7 +106,6 @@ const ChecklistScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {/* ScrollView for To-Do List (Scrolls Down) */}
             <ScrollView style={styles.todoList}>
               {todoLists[item.name] &&
                 todoLists[item.name].map((todo, index) => (
@@ -126,6 +124,14 @@ const ChecklistScreen = () => {
           </View>
         )}
       />
+
+      {/* ✅ Home Button */}
+      <TouchableOpacity
+        style={styles.homeButton}
+        onPress={() => navigation.navigate('Home')}
+      >
+        <Text style={styles.homeButtonText}>Go to Home</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -167,8 +173,8 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   todoList: {
-    maxHeight: 200, // Allows vertical scrolling
-    marginTop: 10, // Space between Add Task and list
+    maxHeight: 200,
+    marginTop: 10,
   },
   todoItem: {
     flexDirection: 'row',
@@ -176,7 +182,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e6e6e6',
     padding: 10,
     borderRadius: 10,
-    marginBottom: 5, // Stack items vertically
+    marginBottom: 5,
   },
   todoText: {
     fontSize: 16,
@@ -198,6 +204,18 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: '#000',
+  },
+  homeButton: {
+    backgroundColor: '#4CAF50',
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  homeButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
