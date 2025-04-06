@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TextInput, View, Text, FlatList, Image, TouchableOpacity,ActivityIndicator } from 'react-native';
 import { firestore } from '../../firebase';  
 import { collection, getDocs, query, where, addDoc, serverTimestamp } from "firebase/firestore";
+
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
@@ -14,7 +15,7 @@ import * as ImagePicker from 'expo-image-picker';
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage"
 import { ScrollView } from 'react-native-gesture-handler';
 import { FAB } from 'react-native-paper';
-import { ProgressContext } from '../ProgressContext/ProgressContext';
+
 
 //Storage
 const storage = getStorage();
@@ -92,13 +93,6 @@ const HomeScreen = ({ navigation }) => {
     "Taj Mahal": require("../../assets/TajMahal.jpg"),
   };
 
-   {/* ✅ Button to Navigate to Badges Screen */}
-   <Button
-   title="View Badges"
-   onPress={() => navigation.navigate('Badges')}
-   color="#6200ea"
- />
- 
   //Feedback session
   const [modalVisible, setModalVisible] = useState(false);
     const [feedback, setFeedback] = useState("");
@@ -251,7 +245,6 @@ const HomeScreen = ({ navigation }) => {
       console.error('Logout failed:', error);
     }
   };
-  
   useEffect(() => {
     loadChecklist();
     loadFavourites();
@@ -641,7 +634,7 @@ const HomeScreen = ({ navigation }) => {
           </TouchableOpacity>
 
                   {/* ✅ Favourite Button (Heart Icon) */}
-                  <TouchableOpacity onPress={() => toggleFavourite(item, checklist)} style={styles.actionButton}>
+          <TouchableOpacity onPress={() => toggleFavourite(item, checklist)} style={styles.actionButton}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <AntDesign
               name={favourites.some(fav => fav.name === item.name) ? 'heart' : 'hearto'}
