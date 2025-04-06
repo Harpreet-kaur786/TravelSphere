@@ -8,7 +8,7 @@ export const ProgressProvider = ({ children }) => {
   const [destinationsVisited, setDestinationsVisited] = useState(0);
   const [checklistsCompleted, setChecklistsCompleted] = useState(0);
   const [tripsPacked, setTripsPacked] = useState(0);
-  const [userPoints, setUserPoints] = useState(0); // ✅ Ensure setUserPoints is included
+  const [userPoints, setUserPoints] = useState(0); 
 
   const visitDestination = () => {
     setDestinationsVisited((prev) => prev + 1);
