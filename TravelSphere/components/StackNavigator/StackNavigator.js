@@ -2,18 +2,19 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../HomeScreen/HomeScreen';
 import DetailsScreen from '../DetailsScreen/DetailsScreen';
-import FavouriteScreen from '../FavouriteScreen/FavouriteScreen';
+import FavouriteScreen from '../FavouriteScreen/FavouriteScreen'; // ✅ Correct import
+import BadgesScreen from '../components/BadgesScreen/BadgesScreen'; // ✅ Correct import
 
 const Stack = createStackNavigator();
 
 const StackNavigator = () => {
   return (
     <Stack.Navigator>
-
       <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />  
       <Stack.Screen name="Details" component={DetailsScreen} options={{ headerShown: true }} />
-     <Stack.Screen name="Favourite" component={FavouriteScreen} options={{headerShown:true}}/>
-     </Stack.Navigator>
+      <Stack.Screen name="Favourite" component={FavouriteScreen} options={{ headerShown: true }} /> {/* Add Favourite Screen */}
+      <Stack.Screen name="Badges" component={BadgesScreen} options={{ headerShown: true, title: "Your Badges" }} />
+    </Stack.Navigator>
   );
 };
 
