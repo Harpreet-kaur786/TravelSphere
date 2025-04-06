@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Button } from "react-native";
 import { Video } from "expo-av";
 import { useNavigation } from "@react-navigation/native";
 import styles from "./styles";
@@ -39,6 +39,13 @@ const GetStartedScreen = () => {
         >
           <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
+       {/* Watch App Tutorial Button */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('AppTutorial')}
+      >
+        <Text style={styles.buttonText}>Watch App Tutorial</Text>
+      </TouchableOpacity>
       </View>
     </View>
   );

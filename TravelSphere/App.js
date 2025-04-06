@@ -13,6 +13,7 @@ import { TouchableOpacity, Text } from 'react-native';
 import FavouriteScreen from './components/FavouriteScreen/FavouriteScreen';
 import ChecklistScreen from './components/ChecklistScreen/ChecklistScreen';
 import FeedbackList from './components/FeedbackList/FeedbackList';
+import AppTutorialScreen from './components/AppTutorial/AppTutorial';
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -38,6 +39,7 @@ const App = () => {
           <Stack.Screen name="GetStarted" component={GetStartedScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="SignUp" component={SignUpScreen} />
+          <Stack.Screen name="AppTutorial" component={AppTutorialScreen}/>
           <Stack.Screen name="Home" component={DrawerNavigator} />
           <Stack.Screen 
             name="Details" 

@@ -280,6 +280,96 @@ const styles = StyleSheet.create({
   destinationCard: { width: 150, backgroundColor: '#fff', borderRadius: 10, marginRight: 10, padding: 10 },
   destinationImage: { width: '100%', height: 100, borderRadius: 10 },
   destinationName: { fontSize: 16, fontWeight: 'bold', marginVertical: 5 },
-  rating: { fontSize: 14, color: 'gold' }
+  rating: { fontSize: 14, color: 'gold' },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+},
+modalContent: {
+    width: "85%",
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+},
+title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+},
+input: {
+    width: "100%",
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+},
+textArea: {
+    width: "100%",
+    height: 80,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    textAlignVertical: "top",
+    marginBottom: 10,
+},
+ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+},
+checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+},
+checkboxText: {
+    marginLeft: 5,
+    fontSize: 16,
+},
+button: {
+    width: "100%",
+    backgroundColor: "#007bff",
+    padding: 12,
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 10,
+},
+buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+},
+closeButton: {
+    marginTop: 5,
+},
+  tutorialCard: {
+    position: 'absolute',
+    bottom: 40, // Distance from bottom
+    left: 20,   // Distance from left
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 5,
+    elevation: 4,
+  },
+  tutorialText: {
+    marginTop: 5,
+    fontSize: 12,  // Smaller font size
+    fontWeight: '600',
+    color: '#333',
+  },
 });
 export default styles;
