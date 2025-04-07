@@ -27,7 +27,7 @@ export const ProgressProvider = ({ children }) => {
         checklistsCompleted, 
         tripsPacked, 
         userPoints, 
-        setUserPoints,  // ✅ Add setUserPoints here
+        setUserPoints,  
         visitDestination, 
         completeChecklist
       }}
