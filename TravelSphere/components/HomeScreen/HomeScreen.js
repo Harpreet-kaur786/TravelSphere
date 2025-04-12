@@ -398,6 +398,7 @@ const renderItem = ({ item }) => {
           <Text>No Image</Text> // Fallback if no image is found
         )}
         <Text style={{ marginBottom:0 }}>{item.name}</Text>
+        <Text style={styles.reviews}>{item.rating} Ratings</Text>
       </TouchableOpacity>
     </>
   );
@@ -896,35 +897,36 @@ contentContainerStyle={styles.regionTabsContainer}
 </TouchableOpacity> 
 ))} 
 </ScrollView> */}
-      <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>
-        Popular
-      </Text>
-      <FlatList
-        data={popularDestinations}
-        horizontal
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={{ marginRight: 10 }}
-            onPress={() => {
-              // Navigate to DetailsScreen and pass destination item
-              navigation.navigate("Details", {
-                item: item, // Pass the entire item (destination) to the DetailsScreen
-              });
-            }}
-          >
-            {popularImages[item.name] ? (
-              <Image
-                source={popularImages[item.name]}
-                style={{ width: 100, height: 100, borderRadius: 10 }}
-              />
-            ) : (
-              <Text>No Image</Text> // Fallback if no image is found
-            )}
-            <Text>{item.name}</Text>
-          </TouchableOpacity>
-        )}
-      />
+      <Text style={styles.Popular}>Popular</Text>
+<FlatList
+  data={popularDestinations}
+  horizontal
+  keyExtractor={(item) => item.id}
+  renderItem={({ item }) => (
+    <TouchableOpacity
+      style={styles.itemContainer}
+      onPress={() => {
+        // Navigate to DetailsScreen and pass destination item
+        navigation.navigate("Details", {
+          item: item, // Pass the entire item (destination) to the DetailsScreen
+        });
+      }}
+    >
+      {popularImages[item.name] ? (
+        <View style={styles.imageWrapper}>
+          <Image
+            source={popularImages[item.name]}
+            style={styles.image}
+          />
+          <Text style={styles.destinationName}>{item.name}</Text>
+        </View>
+      ) : (
+        <Text>No Image</Text> // Fallback if no image is found
+      )}
+    </TouchableOpacity>
+  )}
+/>
+
        {/* Floating Feedback Button */}
  {/* Floating Feedback Button */}
  <FAB 

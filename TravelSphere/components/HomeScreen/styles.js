@@ -371,5 +371,49 @@ closeButton: {
     fontWeight: '600',
     color: '#333',
   },
+  itemContainer: {
+    marginRight: 15,
+  },
+  imageWrapper: {
+    width: 200,
+    height: 200,
+    marginBottom: 10,
+    position: 'relative',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 15,
+    resizeMode: 'cover',
+  },
+  destinationName: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 5,
+    borderRadius: 5,
+  },
+  Popular: {
+    fontSize: 18, // Smaller font size for a subtler look
+    fontWeight: '600', // Semi-bold for a lighter feel
+    color: '#333', // Dark grey color for the text
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Light background for a more subtle look
+    paddingVertical: 6, // Less padding for a compact look
+    paddingHorizontal: 12, // Balanced horizontal padding
+    borderRadius: 15, // Rounded corners with a smaller radius
+    textAlign: 'center', // Center the text horizontally
+    marginBottom: 10, // Margin at the bottom to keep space
+    shadowColor: '#000', // Subtle shadow effect
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 3, // Light elevation for Android shadow
+  },
+  
+  
 });
 export default styles;

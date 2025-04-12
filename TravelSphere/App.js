@@ -9,7 +9,7 @@ import Footer from './components/Footer/Footer';
 import GetStartedScreen from './components/GetStarted/GetStarted';
 import LoginScreen from './components/LoginScreen/LoginScreen';
 import SignUpScreen from './components/SignUpScreen/SignUp';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import FavouriteScreen from './components/FavouriteScreen/FavouriteScreen';
 import ChecklistScreen from './components/ChecklistScreen/ChecklistScreen';
 import FeedbackList from './components/FeedbackList/FeedbackList';
@@ -43,6 +43,7 @@ const App = () => {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="SignUp" component={SignUpScreen} />
           <Stack.Screen name="Home" component={DrawerNavigator} />
+          <Stack.Screen name="AppTutorial" component={AppTutorialScreen} />
           <Stack.Screen 
             name="Details" 
             component={DetailsScreen} 
