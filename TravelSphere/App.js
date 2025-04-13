@@ -63,7 +63,7 @@ const App = () => {
           paddingLeft: 15,
         }}
       >
-        <Ionicons name="home-outline" size={28} color="#007AFF" />
+        <Ionicons name="home-outline" size={34} color="#007AFF" marginLeft={10} />
       </TouchableOpacity>
     ),
   })}

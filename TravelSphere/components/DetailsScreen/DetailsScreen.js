@@ -11,8 +11,9 @@ import { collection, addDoc, getDocs, query, where, orderBy } from 'firebase/fir
 import { auth } from '../../firebase'; // Firebase auth
 import SendSMS from 'react-native-sms';
 import { Linking, Alert } from 'react-native';
-
-
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { TouchableOpacity} from 'react-native';
+import { Ionicons, FontAwesome } from '@expo/vector-icons'; 
 
 const DetailsScreen = ({ route, navigation }) => {
   const { item: destination } = route.params || {};
@@ -182,11 +183,6 @@ const DetailsScreen = ({ route, navigation }) => {
             )}
           </Swiper>
 
-          <View style={{ marginVertical: 10 }}>
-            <Button title="Share via WhatsApp" onPress={shareViaWhatsApp} color="green" />
-             <Button title="Share via SMS" onPress={() => shareViaSMS(destination)} />
-           </View>
-
           <Text style={styles.sectionTitle}>Description</Text>
           <Text style={styles.text}>{description || 'No description available'}</Text>
 
@@ -256,6 +252,25 @@ const DetailsScreen = ({ route, navigation }) => {
              <Text style={styles.text}>No map available</Text>
            )}
           
+              <View style={styles.shareContainer}>
+              <View style={styles.headingRow}>
+                <Ionicons name="share-social" size={24} color="black" />
+                <Text style={styles.shareHeading}>Share Via</Text>
+              </View>
+
+              <View style={styles.iconRow}>
+                <TouchableOpacity style={styles.iconBox} onPress={shareViaWhatsApp}>
+                  <FontAwesome name="whatsapp" size={40} color="#25D366" />
+                  <Text style={styles.iconLabel}>WhatsApp</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.iconBox} onPress={() => shareViaSMS(destination)}>
+                  <Icon name="envelope" size={40} color="#007AFF" />
+                  <Text style={styles.iconLabel}>SMS</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
           <Text style={styles.sectionTitle}>Submit Your Review...</Text>         
           <View style={styles.reviewContainer}>
             <View style={styles.reviewInputContainer}>
@@ -325,19 +340,19 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     marginTop: 10,
     color: '#2f4f4f',
   },
   sectionTitleR: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     marginTop: 21,
     color: '#2f4f4f',
   },
   text: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#555',
     marginBottom: 10,
   },
@@ -435,8 +450,36 @@ weatherIcon: {
   height: 50,
   marginBottom: 10,
 },
-
-
+shareContainer: {
+  marginTop: 10,
+  marginLeft: -20,
+  paddingHorizontal: 16,
+},
+headingRow: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 12,
+},
+shareHeading: {
+  fontSize: 24,
+  fontWeight: 'bold',
+  marginLeft: 8,
+  color: '#2f4f4f',
+},
+iconRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  marginBottom: 20,
+},
+iconBox: {
+  alignItems: 'center',
+},
+iconLabel: {
+  marginTop: 4,
+  fontSize: 20,
+  fontWeight: 'bold',
+  color: '#2f4f4f',
+},
 
 });
 
