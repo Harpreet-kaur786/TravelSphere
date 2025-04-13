@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, Text, View, Image, ScrollView, ActivityIndicator, 
   TextInput, Button, KeyboardAvoidingView, Platform, 
-  TouchableWithoutFeedback, Keyboard 
+  TouchableWithoutFeedback, Keyboard, ImageBackground 
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import axios from 'axios';
@@ -11,6 +11,8 @@ import { collection, addDoc, getDocs, query, where, orderBy } from 'firebase/fir
 import { auth } from '../../firebase'; // Firebase auth
 import SendSMS from 'react-native-sms';
 import { Linking, Alert } from 'react-native';
+
+
 
 const DetailsScreen = ({ route, navigation }) => {
   const { item: destination } = route.params || {};
@@ -163,9 +165,11 @@ const DetailsScreen = ({ route, navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <ScrollView contentContainerStyle={styles.contentContainer}>
+    
+    <ImageBackground source={require('../../assets/backgd.jpeg')} style={styles.background}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <ScrollView contentContainerStyle={styles.contentContainer}>
           <Text style={styles.title}>{name}</Text>
 
           <Swiper style={styles.carousel} showsButtons autoplay>
@@ -236,8 +240,6 @@ const DetailsScreen = ({ route, navigation }) => {
               <Text style={styles.text}>No weather data available</Text>
             )}
 
-
-
           <Text style={styles.sectionTitle}>Attractions</Text>
           {attractions && attractions.length ? (
             attractions.map((attraction, index) => (
@@ -299,18 +301,21 @@ const DetailsScreen = ({ route, navigation }) => {
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
+    </ImageBackground>
   );
 };
 
 // Styles...
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-    padding: 20,
   },
   contentContainer: {
-    paddingBottom: 20,
+    padding: 20,
   },
   title: {
     fontSize: 32,
@@ -322,13 +327,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginTop: 15,
+    marginTop: 10,
     color: '#2f4f4f',
   },
   sectionTitleR: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginTop: 25,
+    marginTop: 20,
     color: '#2f4f4f',
   },
   text: {

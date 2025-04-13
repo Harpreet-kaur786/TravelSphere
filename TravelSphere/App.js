@@ -1,4 +1,5 @@
 import React from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -45,19 +46,29 @@ const App = () => {
           <Stack.Screen name="Home" component={DrawerNavigator} />
           <Stack.Screen name="AppTutorial" component={AppTutorialScreen} />
           <Stack.Screen 
-            name="Details" 
-            component={DetailsScreen} 
-            options={({ navigation }) => ({
-              headerShown: true,
-              headerLeft: () => (
-                <View style={{ paddingLeft: 15 }}>
-                  <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <Text style={{ fontSize: 18, paddingLeft: 15 }}>← Back</Text>
-                </TouchableOpacity>
-                </View>
-              ),
-            })}
-          />
+  name="Details" 
+  component={DetailsScreen} 
+  options={({ navigation }) => ({
+    headerShown: true,
+    title: "Destination Details",
+    headerTitleAlign: 'center',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+      fontSize: 20,
+    },
+    headerLeft: () => (
+      <TouchableOpacity 
+        onPress={() => navigation.navigate("Home")} 
+        style={{
+          paddingLeft: 15,
+        }}
+      >
+        <Ionicons name="home-outline" size={28} color="#007AFF" />
+      </TouchableOpacity>
+    ),
+  })}
+/>
+
         </Stack.Navigator>
       </NavigationContainer>
     </ProgressProvider>
