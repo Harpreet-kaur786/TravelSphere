@@ -110,7 +110,7 @@ const DetailsScreen = ({ route, navigation }) => {
     }
   };
 
-  // Map URL for static image
+  // Map URL for static image of map
   const staticMapUrl = coordinates
     ? `https://maps.gomaps.pro/maps/api/staticmap?center=${coordinates.latitude},${coordinates.longitude}&zoom=12&size=600x400&markers=color:red%7Clabel:A%7C${coordinates.latitude},${coordinates.longitude}&key=AlzaSyb_J6PKounHNd1yQ2X78Petsn-LrtCwl5s`
     : null;
