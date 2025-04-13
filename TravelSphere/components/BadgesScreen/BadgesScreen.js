@@ -1,15 +1,14 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ProgressBarAndroid } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ProgressContext } from '../ProgressContext/ProgressContext';
+import { ProgressBar } from 'react-native-paper'; // ✅ Import from paper
 
 const BadgesScreen = () => {
   const navigation = useNavigation();
   const progress = useContext(ProgressContext);
 
-  if (!progress) {
-    return <Text>Loading...</Text>; // Prevent undefined error
-  }
+  if (!progress) return <Text>Loading...</Text>;
 
   const {
     destinationsVisited,
@@ -21,7 +20,7 @@ const BadgesScreen = () => {
 
   const handleBadgePress = (screen, points) => {
     setUserPoints((prev) => prev + points);
-    navigation.navigate(screen); // Navigate to the correct screen
+    navigation.navigate(screen);
   };
 
   return (
@@ -36,11 +35,7 @@ const BadgesScreen = () => {
           onPress={() => handleBadgePress('Home', 10)}
         >
           <Text style={styles.badgeTitle}>🌍 Explorer</Text>
-          <ProgressBarAndroid
-            styleAttr="Horizontal"
-            indeterminate={false}
-            progress={destinationsVisited / 5}
-          />
+          <ProgressBar progress={destinationsVisited / 5} color="#fff" style={styles.bar} />
         </TouchableOpacity>
 
         {/* ✅ Checklist Champion Badge */}
@@ -49,24 +44,16 @@ const BadgesScreen = () => {
           onPress={() => handleBadgePress('Checklist', 5)}
         >
           <Text style={styles.badgeTitle}>✅ Checklist Champion</Text>
-          <ProgressBarAndroid
-            styleAttr="Horizontal"
-            indeterminate={false}
-            progress={checklistsCompleted / 10}
-          />
+          <ProgressBar progress={checklistsCompleted / 10} color="#fff" style={styles.bar} />
         </TouchableOpacity>
 
         {/* ⭐ Favourites Fan Badge */}
         <TouchableOpacity
           style={[styles.badgeContainer, { backgroundColor: '#DE8776' }]}
-          onPress={() => handleBadgePress('Favourite', 7)} // Correct screen name
+          onPress={() => handleBadgePress('Favourite', 7)}
         >
           <Text style={styles.badgeTitle}>⭐ Favourites Fan</Text>
-          <ProgressBarAndroid
-            styleAttr="Horizontal"
-            indeterminate={false}
-            progress={tripsPacked / 3}
-          />
+          <ProgressBar progress={tripsPacked / 3} color="#fff" style={styles.bar} />
         </TouchableOpacity>
       </View>
 
@@ -88,7 +75,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F5F5F5',
     padding: 20,
-    justifyContent: 'space-between', // Ensures content is pushed to top and button to bottom
+    justifyContent: 'space-between',
   },
   content: {
     flex: 1,
@@ -121,6 +108,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',
+    marginBottom: 10,
+  },
+  bar: {
+    height: 10,
+    width: '100%',
+    backgroundColor: '#ccc',
+    borderRadius: 5,
   },
   homeButton: {
     paddingVertical: 15,
@@ -128,7 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F58320',
     borderRadius: 10,
     marginBottom: 20,
-    alignSelf: 'center', 
+    alignSelf: 'center',
   },
   homeButtonText: {
     color: '#fff',
