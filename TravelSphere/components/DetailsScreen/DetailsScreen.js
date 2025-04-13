@@ -9,6 +9,8 @@ import axios from 'axios';
 import { firestore } from '../../firebase';
 import { collection, addDoc, getDocs, query, where, orderBy } from 'firebase/firestore';
 import { auth } from '../../firebase'; // Firebase auth
+import SendSMS from 'react-native-sms';
+import { Linking, Alert } from 'react-native';
 
 const DetailsScreen = ({ route, navigation }) => {
   const { item: destination } = route.params || {};
@@ -125,6 +127,40 @@ const DetailsScreen = ({ route, navigation }) => {
     return maskedLocalPart;
   };
 
+  // sharing
+  const destinationLink = `https://www.travelsphere.com/destination/${encodeURIComponent(name)}`;
+
+  // ✅ Share via WhatsApp
+  const shareViaWhatsApp = () => {
+    const message = `Check out this destination: ${name}!\n\n${description}\nLocation: ${country}\nMore info: ${destinationLink}`;
+    const url = `whatsapp://send?text=${encodeURIComponent(message)}`;
+  
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          Linking.openURL(url);
+        } else {
+          alert("WhatsApp is not installed on this device.");
+        }
+      })
+      .catch((err) => console.error("Error opening WhatsApp:", err));
+  };
+  //  Share Via SMS
+  const shareViaSMS = ({ name, description, country }) => {
+    const link = `https://www.travelsphere.com/destination/${encodeURIComponent(name)}`;
+    const message = `Check out this destination: ${name}!\n\n${description}\nLocation: ${country}\nMore info: ${link}`;
+    const url = `sms:&body=${encodeURIComponent(message)}`;
+  
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          Linking.openURL(url);
+        } else {
+          Alert.alert('SMS not supported', 'No SMS app is available on this device.');
+        }
+      })
+      .catch((err) => console.error('Error opening SMS:', err));
+  };
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
@@ -141,6 +177,11 @@ const DetailsScreen = ({ route, navigation }) => {
               <Text style={styles.text}>No images available</Text>
             )}
           </Swiper>
+
+          <View style={{ marginVertical: 10 }}>
+            <Button title="Share via WhatsApp" onPress={shareViaWhatsApp} color="green" />
+             <Button title="Share via SMS" onPress={() => shareViaSMS(destination)} />
+           </View>
 
           <Text style={styles.sectionTitle}>Description</Text>
           <Text style={styles.text}>{description || 'No description available'}</Text>
