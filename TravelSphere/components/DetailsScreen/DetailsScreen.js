@@ -501,20 +501,22 @@ iconLabel: {
   color: '#2f4f4f',
 },
 headingRow: {
-  flexDirection: 'row', // Align icon and title horizontally
-  alignItems: 'center', // Vertically align the icon and text
-  marginVertical: 10, // Add some spacing between rows
+  flexDirection: 'row', 
+  alignItems: 'center', 
+  marginVertical: 10, 
 },
 sectionTitle: {
   fontSize: 22,
   fontWeight: 'bold',
-  marginLeft: 5, // Space between the icon and the title text
+  marginLeft: 5,
+  color: '#2f4f4f', 
 },
 sectionTitleR: {
   fontSize: 22,
   fontWeight: 'bold',
   marginLeft: 10,
-  marginTop: 20, 
+  marginTop: 20,
+  color: '#2f4f4f', 
 },
 
 
