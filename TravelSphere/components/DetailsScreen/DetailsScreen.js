@@ -183,22 +183,40 @@ const DetailsScreen = ({ route, navigation }) => {
             )}
           </Swiper>
 
+          <View style={styles.headingRow}>
+          <Ionicons name="document-text" size={26} color="#63c9e5" />
           <Text style={styles.sectionTitle}>Description</Text>
+          </View>
           <Text style={styles.text}>{description || 'No description available'}</Text>
 
+          <View style={styles.headingRow}>
+          <Ionicons name="calendar" size={26} color="#63c9e5" />
           <Text style={styles.sectionTitle}>Best Time to Visit</Text>
+          </View>
           <Text style={styles.text}>{bestTime || 'No time specified'}</Text>
 
+          <View style={styles.headingRow}>
+          <Ionicons name="apps" size={26} color="#63c9e5" />
           <Text style={styles.sectionTitle}>Category</Text>
+          </View>
           <Text style={styles.text}>{category || 'No category specified'}</Text>
 
+          <View style={styles.headingRow}>
+          <Ionicons name="flag" size={26} color="#63c9e5" />
           <Text style={styles.sectionTitle}>Country</Text>
+          </View>
           <Text style={styles.text}>{country || 'No country specified'}</Text>
 
+          <View style={styles.headingRow}>
+          <Ionicons name="help-circle" size={26} color="#63c9e5" />
           <Text style={styles.sectionTitle}>Tips</Text>
+          </View>
           <Text style={styles.text}>{tips || 'No tips available'}</Text>
 
+          <View style={styles.headingRow}>
+          <Ionicons name="cloud" size={26} color="#63c9e5" />
           <Text style={styles.sectionTitle}>Weather</Text>
+          </View>
             {weatherError ? (
               <Text style={styles.text}>Unable to fetch weather data.</Text>
             ) : loading ? (
@@ -236,7 +254,11 @@ const DetailsScreen = ({ route, navigation }) => {
               <Text style={styles.text}>No weather data available</Text>
             )}
 
-          <Text style={styles.sectionTitle}>Attractions</Text>
+            <View style={styles.headingRow}>
+              <Ionicons name="map" size={26} color="#63c9e5" />
+              <Text style={styles.sectionTitle}>Attractions</Text>
+            </View>
+
           {attractions && attractions.length ? (
             attractions.map((attraction, index) => (
               <Text key={index} style={styles.text}>{attraction}</Text>
@@ -245,7 +267,10 @@ const DetailsScreen = ({ route, navigation }) => {
             <Text style={styles.text}>No attractions available</Text>
           )}
 
-           <Text style={styles.sectionTitle}>Location on Map</Text>
+          <View style={styles.headingRow}>
+            <Ionicons name="location" size={26} color="#63c9e5" />
+            <Text style={styles.sectionTitle}>Location on Map</Text>
+          </View>
            {staticMapUrl ? (
              <Image source={{ uri: staticMapUrl }} style={styles.mapImage} />
            ) : (
@@ -254,7 +279,7 @@ const DetailsScreen = ({ route, navigation }) => {
           
               <View style={styles.shareContainer}>
               <View style={styles.headingRow}>
-                <Ionicons name="share-social" size={24} color="black" />
+                <Ionicons name="share-social" size={26} color="#63c9e5" />
                 <Text style={styles.shareHeading}>Share Via</Text>
               </View>
 
@@ -271,7 +296,10 @@ const DetailsScreen = ({ route, navigation }) => {
               </View>
             </View>
 
-          <Text style={styles.sectionTitle}>Submit Your Review...</Text>         
+            <View style={styles.headingRow}>
+            <Ionicons name="chatbox-ellipses" size={26} color="#63c9e5" />
+            <Text style={styles.sectionTitle}>Submit Your Review...</Text>
+            </View>
           <View style={styles.reviewContainer}>
             <View style={styles.reviewInputContainer}>
               <TextInput 
@@ -292,7 +320,10 @@ const DetailsScreen = ({ route, navigation }) => {
             </View>
           </View>
 
-          <Text style={styles.sectionTitleR}>Reviews by Users</Text>
+          <View style={styles.headingRow} marginTop={25}>
+          <Ionicons name="chatbubble" size={26} color="#63c9e5" />
+          <Text style={styles.sectionTitle} >Reviews by Users</Text>
+          </View>
 
           {reviews.length > 0 ? (
             <View style={styles.reviewsList}>
@@ -339,22 +370,11 @@ const styles = StyleSheet.create({
     color: '#2f4f4f',
     marginBottom: 20,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 10,
-    color: '#2f4f4f',
-  },
-  sectionTitleR: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 21,
-    color: '#2f4f4f',
-  },
   text: {
     fontSize: 20,
     color: '#555',
     marginBottom: 10,
+    marginLeft: 25,
   },
   carousel: {
     height: 250,
@@ -480,6 +500,23 @@ iconLabel: {
   fontWeight: 'bold',
   color: '#2f4f4f',
 },
+headingRow: {
+  flexDirection: 'row', // Align icon and title horizontally
+  alignItems: 'center', // Vertically align the icon and text
+  marginVertical: 10, // Add some spacing between rows
+},
+sectionTitle: {
+  fontSize: 22,
+  fontWeight: 'bold',
+  marginLeft: 5, // Space between the icon and the title text
+},
+sectionTitleR: {
+  fontSize: 22,
+  fontWeight: 'bold',
+  marginLeft: 10,
+  marginTop: 20, 
+},
+
 
 });
 
