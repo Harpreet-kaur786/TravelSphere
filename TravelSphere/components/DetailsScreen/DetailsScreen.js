@@ -112,7 +112,7 @@ const DetailsScreen = ({ route, navigation }) => {
 
   // Map URL for static image
   const staticMapUrl = coordinates
-    ? `https://maps.gomaps.pro/maps/api/staticmap?center=${coordinates.latitude},${coordinates.longitude}&zoom=12&size=600x400&markers=color:red%7Clabel:A%7C${coordinates.latitude},${coordinates.longitude}&key=AlzaSyKCEnxPhd_T13y5e3WK0ouKaEeRoSGSG4R`
+    ? `https://maps.gomaps.pro/maps/api/staticmap?center=${coordinates.latitude},${coordinates.longitude}&zoom=12&size=600x400&markers=color:red%7Clabel:A%7C${coordinates.latitude},${coordinates.longitude}&key=AlzaSy5XdD5oDa9pOFu0tRYjvC-lajimbI2Iehv`
     : null;
 
   // Function to mask the entire domain part of the email (including @ and after)
