@@ -580,6 +580,48 @@ tutorialCard: {
   shadowRadius: 5,
   elevation: 4,
 },
+buttonFeedback: {
+  backgroundColor: '#333333',  // dark button
+  paddingVertical: 12,
+  paddingHorizontal: 24,
+  borderRadius: 8,
+  alignItems: 'center',
+  marginVertical: 10,
+},
+
+buttonText: {
+  color: '#ffffff',
+  fontSize: 16,
+  fontWeight: '500',
+},
+
+closeButton: {
+  backgroundColor: '#ff4d4d',  // keep close button red
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  borderRadius: 8,
+  alignItems: 'center',
+  marginVertical: 10,
+},
+textArea: {
+  height: 80,       
+  borderColor: '#E53935',  
+  borderWidth: 1.5,
+  borderRadius: 8,
+  padding: 10,
+  textAlignVertical: 'top',
+  fontSize: 14,
+  color: '#333',
+  backgroundColor: '#fff',
+  shadowColor: '#000',
+  shadowOpacity: 0.05,
+  shadowOffset: { width: 0, height: 1 },
+  shadowRadius: 2,
+  elevation: 2,
+  marginBottom: 12,
+}
+
+
 
 
 }); 

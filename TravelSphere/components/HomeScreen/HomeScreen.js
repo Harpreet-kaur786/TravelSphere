@@ -1222,7 +1222,7 @@ const HomeScreen = ({ navigation }) => {
               />
               <Text style={styles.checkboxText}>Submit as Anonymous</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={submitFeedback}>
+            <TouchableOpacity style={styles.buttonFeedback} onPress={submitFeedback}>
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
             <TouchableOpacity
