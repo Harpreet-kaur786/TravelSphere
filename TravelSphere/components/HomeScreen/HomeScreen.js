@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import {
   TextInput,
   View,
@@ -9,71 +8,49 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-
 import { firestore, collection, getDocs, query, where } from "../../firebase";
-
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
-
 import { signOut } from "firebase/auth";
-
 import { auth } from "../../firebase";
-
 import styles from "./styles";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { Picker } from "@react-native-picker/picker";
-
 import { Modal } from "react-native";
-
 import { Button } from "react-native";
-
 import * as ImagePicker from "expo-image-picker";
-
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-
 import { serverTimestamp, addDoc } from "firebase/firestore";
 
 import { Ionicons } from "@expo/vector-icons";
-
 import { ScrollView } from "react-native-gesture-handler";
-
 import { FAB } from "react-native-paper";
-
 import { ImageBackground } from "react-native";
 
 const storage = getStorage();
 
 const levenshtein = (a, b) => {
   const tmp = [];
-
   let i, j;
-
   for (i = 0; i <= a.length; i++) {
     tmp[i] = [i];
   }
-
   for (j = 0; j <= b.length; j++) {
     tmp[0][j] = j;
   }
-
   for (i = 1; i <= a.length; i++) {
     for (j = 1; j <= b.length; j++) {
       tmp[i][j] = Math.min(
         tmp[i - 1][j] + 1,
-
         tmp[i][j - 1] + 1,
-
         tmp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
       );
     }
   }
-
   return tmp[a.length][b.length];
 };
 
@@ -127,47 +104,31 @@ const HomeScreen = ({ navigation }) => {
   const [popularDestinations, setPopularDestinations] = useState([]);
 
   const [modalVisible, setModalVisible] = useState(false);
-
   const [feedback, setFeedback] = useState("");
-
   const [name, setName] = useState("");
-
   const [rating, setRating] = useState(0);
-
   const [anonymous, setAnonymous] = useState(false);
 
   const submitFeedback = async () => {
     if (!feedback.trim()) {
       alert("Please enter feedback before submitting.");
-
       return;
     }
-
     try {
       await addDoc(collection(firestore, "feedback"), {
         feedback: feedback.trim(),
-
         name: anonymous ? "Anonymous" : name || "Anonymous",
-
         rating: rating || "No Rating",
-
         timestamp: serverTimestamp(),
       });
-
       alert("Feedback submitted successfully!");
-
       setFeedback("");
-
       setName("");
-
       setRating(0);
-
       setAnonymous(false);
-
       setModalVisible(false);
     } catch (error) {
       console.error("Error submitting feedback:", error);
-
       alert("Failed to submit feedback. Please try again.");
     }
   };
@@ -444,7 +405,6 @@ const HomeScreen = ({ navigation }) => {
 
       await AsyncStorage.setItem(
         "searchHistory",
-
         JSON.stringify(searchHistory)
       );
     } catch (error) {
@@ -508,15 +468,11 @@ const HomeScreen = ({ navigation }) => {
             destination.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (destination.country &&
               destination.country
-
                 .toLowerCase()
-
                 .includes(searchTerm.toLowerCase())) ||
             (destination.category &&
               destination.category
-
                 .toLowerCase()
-
                 .includes(searchTerm.toLowerCase()))
           ) {
             recom.push(destination);
@@ -562,11 +518,8 @@ const HomeScreen = ({ navigation }) => {
               source={{ uri: item.image }} // Fetch image from Firestore URL
               style={{
                 width: 100,
-
                 height: 100,
-
                 borderRadius: 10,
-
                 marginBottom: 0,
               }}
             />
@@ -777,6 +730,65 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <>
+    <Modal
+  visible={isEditingProfile}
+  animationType="slide"
+  transparent
+  onRequestClose={() => setIsEditingProfile(false)}
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      {/* Profile Image Preview */}
+      <View style={styles.profileImagePreviewContainer}>
+        <Image
+          source={{
+            uri:
+              newProfilePhoto ||
+              userProfilePhoto ||
+              "https://placekitten.com/200/200",
+          }}
+          style={styles.profileImageModal}
+        />
+        <TouchableOpacity
+          style={styles.editIcon}
+          onPress={handleImagePicker}
+        >
+          <AntDesign name="camera" size={18} color="#fff" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Name Input */}
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your name"
+        value={newName}
+        onChangeText={setNewName}
+      />
+
+      {/* Change Profile Picture Button */}
+      <TouchableOpacity
+        style={styles.uploadButton}
+        onPress={handleImagePicker}
+      >
+        <Text style={styles.uploadButtonText}>Change Profile Picture</Text>
+      </TouchableOpacity>
+
+      {/* Save & Cancel Buttons */}
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile}>
+          <Text style={styles.buttonText}>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={() => setIsEditingProfile(false)}
+        >
+          <Text style={styles.buttonText}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+</Modal>
+
       <ImageBackground
         source={require("../../assets/backgd.jpeg")} // 👈 Replace with your image path
         style={{ flex: 1 }}
@@ -790,12 +802,9 @@ const HomeScreen = ({ navigation }) => {
           renderItem={({ item }) => (
             <View style={styles.card}>
               <Image source={{ uri: item.image }} style={styles.image} />
-
               <View style={styles.cardContent}>
                 <Text style={styles.title}>{item.name}</Text>
-
                 <Text style={styles.description}>{item.description}</Text>
-
                 <View style={styles.actionRow}>
                   <TouchableOpacity
                     onPress={() => toggleChecklist(item)}
@@ -810,13 +819,10 @@ const HomeScreen = ({ navigation }) => {
                       size={20}
                       color="#32CD32"
                     />
-
                     <Text
                       style={{
                         marginLeft: 5,
-
                         color: "#32CD32",
-
                         fontWeight: "bold",
                       }}
                     >
@@ -837,13 +843,10 @@ const HomeScreen = ({ navigation }) => {
                       size={20}
                       color="red"
                     />
-
                     <Text
                       style={{
                         marginLeft: 5,
-
                         color: "red",
-
                         fontWeight: "bold",
                       }}
                     >
@@ -856,7 +859,6 @@ const HomeScreen = ({ navigation }) => {
                     style={styles.detailsLink}
                   >
                     <AntDesign name="plus" size={16} color="#4CAF50" />
-
                     <Text style={styles.detailsText}> View Details</Text>
                   </TouchableOpacity>
                 </View>
@@ -866,7 +868,6 @@ const HomeScreen = ({ navigation }) => {
           ListHeaderComponent={
             <>
               {/* Profile and Search Section */}
-
               <View style={styles.topContainer}>
                 <View style={styles.profileSection}>
                   <Image
@@ -877,7 +878,6 @@ const HomeScreen = ({ navigation }) => {
                     }
                     style={styles.profileImage}
                   />
-
                   <View style={styles.profileInfo}>
                     <Text
                       style={styles.profileName}
@@ -886,7 +886,6 @@ const HomeScreen = ({ navigation }) => {
                     >
                       {userName}
                     </Text>
-
                     <TouchableOpacity
                       onPress={handleEditProfile}
                       style={styles.editButton}
@@ -903,7 +902,6 @@ const HomeScreen = ({ navigation }) => {
                   >
                     <AntDesign name="reload1" size={18} color="#4CAF50" />
                   </TouchableOpacity>
-
                   <TextInput
                     style={[styles.inputContainer, { color: "#000" }]}
                     placeholder="Destinations"
@@ -911,7 +909,6 @@ const HomeScreen = ({ navigation }) => {
                     value={searchTerm}
                     onChangeText={setSearchTerm}
                   />
-
                   <TouchableOpacity
                     onPress={handleSearch}
                     style={styles.searchIcon}
@@ -922,11 +919,9 @@ const HomeScreen = ({ navigation }) => {
               </View>
 
               {/* Filters */}
-
               <View style={styles.filterContainer}>
                 <View style={styles.filterTitleContainer}>
                   <Text style={styles.filterTitle}>Filter</Text>
-
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <TouchableOpacity
                       onPress={resetFilters}
@@ -938,7 +933,6 @@ const HomeScreen = ({ navigation }) => {
                         color="#4CAF50"
                       />
                     </TouchableOpacity>
-
                     <TouchableOpacity
                       onPress={toggleFilter}
                       style={styles.filterToggle}
@@ -1088,9 +1082,7 @@ const HomeScreen = ({ navigation }) => {
           ListFooterComponent={
             <>
               {/* Recommended Section */}
-
               <Text style={styles.sectionTitle}>Recommended</Text>
-
               {recommendations.length > 0 ? (
                 <FlatList
                   data={recommendations}
@@ -1105,11 +1097,8 @@ const HomeScreen = ({ navigation }) => {
                   No recommendations available.
                 </Text>
               )}
-
               {/* Popular Section */}
-
               <Text style={styles.sectionTitle}>Popular</Text>
-
               <FlatList
                 data={popularDestinations}
                 horizontal
@@ -1127,7 +1116,6 @@ const HomeScreen = ({ navigation }) => {
                     ) : (
                       <Text>No Image</Text>
                     )}
-
                     <Text>{item.name}</Text>
                   </TouchableOpacity>
                 )}
@@ -1135,40 +1123,28 @@ const HomeScreen = ({ navigation }) => {
               />
 
               {/* Tutorial Shortcut and Feedback Button in Same Row */}
-
               <View
                 style={{
                   flexDirection: "row",
-
                   justifyContent: "space-around",
-
                   alignItems: "center",
-
                   marginTop: 20,
-
                   marginBottom: 40,
                 }}
               >
                 {/* Tutorial Button */}
-
                 <TouchableOpacity
                   style={{
                     flexDirection: "row",
-
                     alignItems: "center",
-
                     padding: 10,
-
                     backgroundColor: "#007bff",
-
                     borderRadius: 25,
-
                     paddingHorizontal: 15,
                   }}
                   onPress={() => navigation.navigate("AppTutorial")}
                 >
                   <Ionicons name="play-circle" size={24} color="#fff" />
-
                   <Text
                     style={{ color: "#fff", fontWeight: "bold", marginLeft: 8 }}
                   >
@@ -1177,25 +1153,18 @@ const HomeScreen = ({ navigation }) => {
                 </TouchableOpacity>
 
                 {/* Feedback Button - matching style */}
-
                 <TouchableOpacity
                   style={{
                     flexDirection: "row",
-
                     alignItems: "center",
-
                     padding: 10,
-
                     backgroundColor: "#007bff",
-
                     borderRadius: 25,
-
                     paddingHorizontal: 15,
                   }}
                   onPress={() => setModalVisible(true)}
                 >
                   <MaterialIcons name="feedback" size={24} color="#fff" />
-
                   <Text
                     style={{ color: "#fff", fontWeight: "bold", marginLeft: 8 }}
                   >
@@ -1209,12 +1178,10 @@ const HomeScreen = ({ navigation }) => {
       </ImageBackground>
 
       {/* Feedback Modal */}
-
       <Modal visible={modalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.title}>Give Feedback</Text>
-
             {!anonymous && (
               <TextInput
                 style={styles.input}
@@ -1223,7 +1190,6 @@ const HomeScreen = ({ navigation }) => {
                 onChangeText={setName}
               />
             )}
-
             <TextInput
               style={styles.textArea}
               placeholder="Enter your feedback..."
@@ -1231,10 +1197,8 @@ const HomeScreen = ({ navigation }) => {
               value={feedback}
               onChangeText={setFeedback}
             />
-
             <View style={styles.ratingContainer}>
               <Text style={{ fontSize: 16, fontWeight: "bold" }}>Rate Us:</Text>
-
               <View style={{ flexDirection: "row" }}>
                 {[1, 2, 3, 4, 5].map((num) => (
                   <TouchableOpacity key={num} onPress={() => setRating(num)}>
@@ -1247,7 +1211,6 @@ const HomeScreen = ({ navigation }) => {
                 ))}
               </View>
             </View>
-
             <TouchableOpacity
               style={styles.checkboxContainer}
               onPress={() => setAnonymous(!anonymous)}
@@ -1257,14 +1220,11 @@ const HomeScreen = ({ navigation }) => {
                 size={24}
                 color="#007bff"
               />
-
               <Text style={styles.checkboxText}>Submit as Anonymous</Text>
             </TouchableOpacity>
-
             <TouchableOpacity style={styles.button} onPress={submitFeedback}>
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               onPress={() => setModalVisible(false)}
               style={styles.closeButton}

@@ -343,6 +343,7 @@ borderRadius: 60,
 borderWidth: 2, 
 
 borderColor: '#ddd', 
+backgroundColor: "#ccc",
 
 }, 
 
